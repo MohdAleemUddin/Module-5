@@ -1,0 +1,31 @@
+name: CoaxCraft Observability Gate
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  observability-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Run CI Gate CLI
+        run: |
+          python -m edge.m5_observability.tools.m5_ci_gate_cli \
+            --policy policy.json \
+            --input ci_input.json \
+            --out receipt_m5.jsonl \
+            --gate-mode Hard
+      
+      - name: Upload receipt artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: receipt_m5
+          path: receipt_m5.jsonl
+

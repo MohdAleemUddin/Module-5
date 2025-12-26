@@ -1,0 +1,9 @@
+{
+  "missing_signals": ["optional_signal"],
+  "coverage": 85.0,
+  "pii_findings": [],
+  "cardinality_findings": [],
+  "dynkey_violations": [],
+  "schema_violations": []
+}
+

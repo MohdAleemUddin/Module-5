@@ -1,0 +1,9 @@
+{
+  "missing_signals": ["request_id", "trace_id"],
+  "coverage": 90.0,
+  "pii_findings": ["email"],
+  "cardinality_findings": [],
+  "dynkey_violations": [],
+  "schema_violations": []
+}
+

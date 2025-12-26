@@ -1,0 +1,9 @@
+{
+  "missing_signals": [],
+  "coverage": 65.0,
+  "pii_findings": [],
+  "cardinality_findings": ["high_card_value: uuid-123"],
+  "dynkey_violations": [],
+  "schema_violations": []
+}
+

@@ -3221,3 +3221,774 @@ Tests: `python -m pytest -q tests/m5_observability/edge/test_f8_m4_hook.py` → 
 
 ---
 
+_**User (2025-12-26 07:15Z)**_
+
+run the extension
+
+---
+
+_**Agent (model gpt-5.1-codex-max, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+**Clarifying extension run limitations**
+
+I see there's no build or start script, and running the extension host isn't possible here, so I'll confirm `npm test` ran and explain that running the extension requires launching VS Code with F5 locally.</details></think>
+
+---
+
+I can’t launch the VS Code extension host in this environment. To run it locally, in your VS Code, open this workspace and press F5 (Run Extension) to start the Extension Development Host. From the terminal you can prep first:
+
+```
+npm install
+npm test
+```
+
+Then use the F5 debug target to run the extension.
+
+---
+
+_**User (2025-12-26 07:15Z)**_
+
+where should i run this in npm install
+npm test root folder or in src??
+
+---
+
+_**Agent (model gpt-5.1-codex-max, mode Agent)**_
+
+Run both commands from the project root (`a:\Module-5\Module-5`):
+
+```
+npm install
+npm test
+```
+
+No need to run them inside `src`.
+
+---
+
+_**User (2025-12-26 07:15Z)**_
+
+run all pytest
+
+---
+
+_**Agent (model gpt-5.1-codex-max, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+**Running all tests with pytest**
+
+I'll run `python -m pytest` from the known path after changing directories to execute the full test suite.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
+<details><summary>Tool use: **run_terminal_cmd** • Run command: cd A:\Module-5\Module-5; python -m pytest</summary>
+
+```bash
+cd A:\Module-5\Module-5; python -m pytest
+```
+
+```
+============================= test session starts =============================
+platform win32 -- Python 3.14.2, pytest-9.0.2, pluggy-1.6.0
+rootdir: A:\Module-5\Module-5
+collected 151 items
+
+tests\m5_observability\e2e\test_f8_e2e_flow.py ..                        [  1%]
+tests\m5_observability\edge\test_f1_cardinality.py ....                  [  3%]
+tests\m5_observability\edge\test_f1_coverage.py .....                    [  7%]
+tests\m5_observability\edge\test_f1_pii.py ..                            [  8%]
+tests\m5_observability\edge\test_f1_required_signals.py ....             [ 11%]
+tests\m5_observability\edge\test_f1_surfaces.py .....                    [ 14%]
+tests\m5_observability\edge\test_f2_correlation_injector.py .........    [ 20%]
+tests\m5_observability\edge\test_f2_logging_inserter.py .......          [ 25%]
+tests\m5_observability\edge\test_f2_metrics_inserter.py ...........      [ 32%]
+tests\m5_observability\edge\test_f2_smoke_runner.py .......              [ 37%]
+tests\m5_observability\edge\test_f3_dynamic_key_blocker.py ....          [ 39%]
+tests\m5_observability\edge\test_f3_high_cardinality_gate.py ....        [ 42%]
+tests\m5_observability\edge\test_f3_pii_redaction_quickfix.py ..         [ 43%]
+tests\m5_observability\edge\test_f3_policy_loader.py ...                 [ 45%]
+tests\m5_observability\edge\test_f3_schema_linter.py ...                 [ 47%]
+tests\m5_observability\edge\test_f5_ci_gate_cli_sim.py ...               [ 49%]
+tests\m5_observability\edge\test_f5_explainability.py F..                [ 51%]
+tests\m5_observability\edge\test_f5_outcome_engine.py .............F     [ 60%]
+tests\m5_observability\edge\test_f6_actor.py .......                     [ 65%]
+tests\m5_observability\edge\test_f6_parity.py ...........                [ 72%]
+tests\m5_observability\edge\test_f6_pc1_hooks.py .......                 [ 77%]
+tests\m5_observability\edge\test_f7_export_ci.py .                       [ 78%]
+tests\m5_observability\edge\test_f7_receipt_schema.py ...                [ 80%]
+tests\m5_observability\edge\test_f7_receipt_signature.py .....           [ 83%]
+tests\m5_observability\edge\test_f7_receipt_writer.py ....               [ 86%]
+tests\m5_observability\edge\test_f8_m1_linkage.py .........              [ 92%]
+tests\m5_observability\edge\test_f8_m2_suppression.py ..........         [ 98%]
+tests\m5_observability\edge\test_f8_m4_hook.py ..                        [100%]
+
+================================== FAILURES ===================================
+__________________________ test_hard_block_critical ___________________________
+
+    def test_hard_block_critical():
+        """HARD block due to missing critical signals."""
+        policy = {
+            "obs.require_correlation_id": True,
+            "obs.require_hw_timestamp": False,
+            "obs.min_cov_warn": 80.0,
+            "obs.min_cov_block": 70.0,
+        }
+        findings = {
+            "missing_signals": ["request_id", "trace_id", "signal1"],
+            "pii_findings": [],
+            "cardinality_findings": [],
+            "telemetry_coverage_pct": 90.0,
+        }
+        outcome = "hard_block"
+    
+        result = build_explainability(policy, findings, outcome)
+    
+&gt;       assert len(result["fired_rules"]) == 2
+E       AssertionError: assert 1 == 2
+E        +  where 1 = len([{'rule_id': 'OBS-EXPL-0001', 'threshold': 'require_correlation_id=True,require_hw_timestamp=False', 'why': 'Missing critical signals: request_id,trace_id'}])
+
+tests\m5_observability\edge\test_f5_explainability.py:23: AssertionError
+_ test_eval_outcome[missing_signals13-pii_findings13-cardinality_findings13-True-True-80.0-70.0-90.0-hard_block-OBS: HARD [missing_critical=hw_ts_ms,request_id,trace_id; pii=1]] _
+
+missing_signals = ['request_id', 'trace_id', 'hw_ts_ms']
+pii_findings = ['pii1'], cardinality_findings = []
+require_correlation_id = True, require_hw_timestamp = True, min_cov_warn = 80.0
+min_cov_block = 70.0, telemetry_coverage_pct = 90.0
+expected_outcome = 'hard_block'
+expected_rationale = 'OBS: HARD [missing_critical=hw_ts_ms,request_id,trace_id; pii=1]'
+
+    @pytest.mark.parametrize(
+        "missing_signals,pii_findings,cardinality_findings,require_correlation_id,require_hw_timestamp,min_cov_warn,min_cov_block,telemetry_coverage_pct,expected_outcome,expected_rationale",
+        [
+            # PASS cases
+            ([], [], [], False, False, 80.0, 70.0, 90.0, "pass", "OBS: PASS"),
+            ([], [], [], True, False, 80.0, 70.0, 90.0, "pass", "OBS: PASS"),
+    
+            # WARN cases
+            (["signal1"], [], [], False, False, 80.0, 70.0, 85.0, "warn", "OBS: WARN [coverage=85.0; missing=signal1]"),
+            ([], [], [], False, False, 80.0, 70.0, 75.0, "warn", "OBS: WARN [coverage=75.0; missing=-]"),
+            (["a", "b"], [], [], False, False, 80.0, 70.0, 85.0, "warn", "OBS: WARN [coverage=85.0; missing=a,b]"),
+    
+            # SOFT_BLOCK cases
+            ([], [], ["card1"], False, False, 80.0, 70.0, 85.0, "soft_block", "OBS: SOFT [coverage=85.0; missing=-; card=1]"),
+            (["signal1"], [], ["card1", "card2"], False, False, 80.0, 70.0, 85.0, "soft_block", "OBS: SOFT [coverage=85.0; missing=signal1; card=2]"),
+            ([], [], [], False, False, 80.0, 70.0, 65.0, "soft_block", "OBS: SOFT [coverage=65.0; missing=-; card=0]"),
+            (["signal1"], [], [], False, False, 80.0, 70.0, 65.0, "soft_block", "OBS: SOFT [coverage=65.0; missing=signal1; card=0]"),
+    
+            # HARD_BLOCK cases
+            (["request_id", "trace_id"], [], [], True, False, 80.0, 70.0, 90.0, "hard_block", "OBS: HARD [missing_critical=request_id,trace_id; pii=0]"),
+            (["hw_ts_ms"], [], [], False, True, 80.0, 70.0, 90.0, "hard_block", "OBS: HARD [missing_critical=hw_ts_ms; pii=0]"),
+            ([], ["pii1"], [], False, False, 80.0, 70.0, 90.0, "hard_block", "OBS: HARD [missing_critical=-; pii=1]"),
+            (["signal1"], ["pii1", "pii2"], [], False, False, 80.0, 70.0, 90.0, "hard_block", "OBS: HARD [missing_critical=-; pii=2]"),
+            (["request_id", "trace_id", "hw_ts_ms"], ["pii1"], [], True, True, 80.0, 70.0, 90.0, "hard_block", "OBS: HARD [missing_critical=hw_ts_ms,request_id,trace_id; pii=1]"),
+        ],
+    )
+    def test_eval_outcome(
+        missing_signals,
+        pii_findings,
+        cardinality_findings,
+        require_correlation_id,
+        require_hw_timestamp,
+        min_cov_warn,
+        min_cov_block,
+        telemetry_coverage_pct,
+        expected_outcome,
+        expected_rationale,
+    ):
+        result = eval_outcome(
+            missing_signals=missing_signals,
+            pii_findings=pii_findings,
+            cardinality_findings=cardinality_findings,
+            require_correlation_id=require_correlation_id,
+            require_hw_timestamp=require_hw_timestamp,
+            min_cov_warn=min_cov_warn,
+            min_cov_block=min_cov_block,
+            telemetry_coverage_pct=telemetry_coverage_pct,
+        )
+    
+        assert result["outcome"] == expected_outcome
+        assert result["rule_id"] == "OBS-GATE-0001"
+&gt;       assert result["rationale"] == expected_rationale
+E       AssertionError: assert 'OBS: HARD [m...ce_id; pii=1]' == 'OBS: HARD [m...ce_id; pii=1]'
+E         
+E         - OBS: HARD [missing_critical=hw_ts_ms,request_id,trace_id; pii=1]
+E         ?                             ---------
+E         + OBS: HARD [missing_critical=request_id,trace_id; pii=1]
+
+tests\m5_observability\edge\test_f5_outcome_engine.py:56: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/m5_observability/edge/test_f5_explainability.py::test_hard_block_critical
+FAILED tests/m5_observability/edge/test_f5_outcome_engine.py::test_eval_outcome[missing_signals13-pii_findings13-cardinality_findings13-True-True-80.0-70.0-90.0-hard_block-OBS: HARD [missing_critical=hw_ts_ms,request_id,trace_id; pii=1]]
+======================== 2 failed, 149 passed in 2.48s ========================
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Identifying failing explainability tests**
+
+Found failing tests related to the explainability build_explainability function in edge/m5_observability/gates/explainability.py, so next I'll open and inspect this code.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: edge/m5_observability/gates/explainability.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Adjusting missing rules logic for optional signals**
+
+The test expects the missing signals rule 0008 even when critical missing signals are present, requiring logic to add 0008 whenever any non-critical (optional) signals are missing alongside critical ones. I'll change the code to compute optional missing signals and add 0008 if any exist, updating the rationale message accordingly.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: edge/m5_observability/gates/outcome_engine.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Adjusting correlation rule to include hardware timestamp**
+
+I'm updating the first rule to include the hardware timestamp in the critical missing signals list when both correlation IDs and hw_ts_ms are required but missing, ensuring it returns all together and prevents the second rule from firing prematurely. I'll also refine optional signals handling and rule firing explanations accordingly.</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "edge/m5_observability/gates/explainability.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "14e56ab0-8390-4b3a-8005-04d0caa90524",
+  "codeblock": {
+    "uri": {
+      "scheme": "file",
+      "authority": "",
+      "path": "/a:/Module-5/Module-5/edge/m5_observability/gates/explainability.py",
+      "query": "",
+      "fragment": "",
+      "_formatted": "file:///a%3A/Module-5/Module-5/edge/m5_observability/gates/explainability.py",
+      "_fsPath": "a:\\Module-5\\Module-5\\edge\\m5_observability\\gates\\explainability.py"
+    },
+    "codeblockId": "14e56ab0-8390-4b3a-8005-04d0caa90524",
+    "codeBlockIdx": 0,
+    "content": "def build_explainability(policy: dict, findings: dict, outcome: str) -&gt; dict:\r\n    fired_rules = []\r\n    \r\n    missing_signals = findings.get(\"missing_signals\", [])\r\n    pii_findings = findings.get(\"pii_findings\", [])\r\n    cardinality_findings = findings.get(\"cardinality_findings\", [])\r\n    dynamic_key_findings = findings.get(\"dynamic_key_findings\", [])\r\n    schema_violations = findings.get(\"schema_violations\", [])\r\n    telemetry_coverage_pct = findings.get(\"telemetry_coverage_pct\", 100.0)\r\n    \r\n    require_correlation_id = policy.get(\"obs.require_correlation_id\", False)\r\n    require_hw_timestamp = policy.get(\"obs.require_hw_timestamp\", False)\r\n    min_cov_warn = policy.get(\"obs.min_cov_warn\", 80.0)\r\n    min_cov_block = policy.get(\"obs.min_cov_block\", 70.0)\r\n    disallow_dynamic_keys = policy.get(\"obs.disallow_dynamic_keys\", False)\r\n    cardinality_outcome = policy.get(\"obs.cardinality_outcome\", \"soft_block\")\r\n    \r\n    # OBS-EXPL-0001 MissingCritical\r\n    critical_missing = []\r\n    if require_correlation_id:\r\n        if \"request_id\" in missing_signals:\r\n            critical_missing.append(\"request_id\")\r\n        if \"trace_id\" in missing_signals:\r\n            critical_missing.append(\"trace_id\")\r\n    if require_hw_timestamp and \"hw_ts_ms\" in missing_signals:\r\n        critical_missing.append(\"hw_ts_ms\")\r\n    \r\n    if critical_missing:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0001\",\r\n            \"threshold\": f\"require_correlation_id={require_correlation_id},require_hw_timestamp={require_hw_timestamp}\",\r\n            \"why\": f\"Missing critical signals: {','.join(sorted(critical_missing))}\"\r\n        })\r\n    \r\n    # OBS-EXPL-0004 PII\r\n    if pii_findings:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0004\",\r\n            \"threshold\": \"disallow_pii=true\",\r\n            \"why\": f\"Found {len(pii_findings)} PII/secret field(s)\"\r\n        })\r\n    \r\n    # OBS-EXPL-0005 DynamicKey\r\n    if dynamic_key_findings and disallow_dynamic_keys:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0005\",\r\n            \"threshold\": f\"disallow_dynamic_keys={disallow_dynamic_keys}\",\r\n            \"why\": f\"Found {len(dynamic_key_findings)} dynamic key(s)\"\r\n        })\r\n    \r\n    # OBS-EXPL-0006 HighCardinality\r\n    if cardinality_findings:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0006\",\r\n            \"threshold\": f\"cardinality_outcome={cardinality_outcome}\",\r\n            \"why\": f\"Found {len(cardinality_findings)} high-cardinality value(s)\"\r\n        })\r\n    \r\n    # OBS-EXPL-0007 SchemaViolation\r\n    if schema_violations:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0007\",\r\n            \"threshold\": \"enforce_schema=true\",\r\n            \"why\": f\"Found {len(schema_violations)} schema violation(s)\"\r\n        })\r\n    \r\n    # OBS-EXPL-0003 CoverageBelowBlock\r\n    if telemetry_coverage_pct &lt; min_cov_block:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0003\",\r\n            \"threshold\": f\"min_cov_block={min_cov_block}\",\r\n            \"why\": f\"Coverage {telemetry_coverage_pct:.2f}% below block threshold {min_cov_block}%\"\r\n        })\r\n    \r\n    # OBS-EXPL-0002 CoverageBelowWarn\r\n    if telemetry_coverage_pct &lt; min_cov_warn:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0002\",\r\n            \"threshold\": f\"min_cov_warn={min_cov_warn}\",\r\n            \"why\": f\"Coverage {telemetry_coverage_pct:.2f}% below warn threshold {min_cov_warn}%\"\r\n        })\r\n    \r\n    # OBS-EXPL-0008 MissingSignalsMinor\r\n    optional_missing = sorted(set(missing_signals) - set(critical_missing))\r\n    if optional_missing:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0008\",\r\n            \"threshold\": \"require_signals=optional\",\r\n            \"why\": f\"Missing {len(optional_missing)} optional signal(s): {','.join(optional_missing)}\"\r\n        })\r\n    \r\n    # Sort fired_rules by rule_id\r\n    fired_rules.sort(key=lambda x: x[\"rule_id\"])\r\n    \r\n    # Determine smallest_fix\r\n    smallest_fix = {\"type\": \"none\", \"action_id\": \"\", \"summary\": \"\"}\r\n    \r\n    if pii_findings:\r\n        smallest_fix = {\r\n            \"type\": \"redaction\",\r\n            \"action_id\": \"zeroui.m5.redactPii\",\r\n            \"summary\": \"Redact PII/secret fields\"\r\n        }\r\n    elif dynamic_key_findings and disallow_dynamic_keys:\r\n        smallest_fix = {\r\n            \"type\": \"rewrite\",\r\n            \"action_id\": \"zeroui.m5.rewriteLabels\",\r\n            \"summary\": \"Rewrite dynamic label keys to static key + value field\"\r\n        }\r\n    elif schema_violations:\r\n        smallest_fix = {\r\n            \"type\": \"schema_fix\",\r\n            \"action_id\": \"zeroui.m5.fixSchema\",\r\n            \"summary\": \"Rename/normalize fields to schema\"\r\n        }\r\n    elif critical_missing or missing_signals or telemetry_coverage_pct &lt; min_cov_warn or telemetry_coverage_pct &lt; min_cov_block:\r\n        smallest_fix = {\r\n            \"type\": \"snippet\",\r\n            \"action_id\": \"zeroui.m5.insertObsSnippet\",\r\n            \"summary\": \"Add required observability signals\"\r\n        }\r\n    \r\n    return {\r\n        \"fired_rules\": fired_rules,\r\n        \"smallest_fix\": smallest_fix\r\n    }\r\n\r\n",
+    "languageId": "python"
+  }
+}
+```
+Result:
+
+```json
+{
+  "diff": {
+    "chunks": [
+      {
+        "diffString": "      \r\n      # OBS-EXPL-0008 MissingSignalsMinor\r\n-     if missing_signals and not critical_missing:\r\n+     optional_missing = sorted(set(missing_signals) - set(critical_missing))\r\n+     if optional_missing:\r\n          fired_rules.append({\r\n              \"rule_id\": \"OBS-EXPL-0008\",\r\n              \"threshold\": \"require_signals=optional\",\r\n-             \"why\": f\"Missing {len(missing_signals)} optional signal(s): {','.join(sorted(missing_signals))}\"\r\n+             \"why\": f\"Missing {len(optional_missing)} optional signal(s): {','.join(optional_missing)}\"\r\n          })\r\n      \r",
+        "oldStart": 82,
+        "newStart": 82,
+        "oldLines": 9,
+        "newLines": 10,
+        "linesRemoved": 2,
+        "linesAdded": 3
+      }
+    ],
+    "editor": "EDITOR_AI"
+  },
+  "shouldAutoFixLints": true,
+  "resultForModel": "Success. Updated the following files:\nM edge/m5_observability/gates/explainability.py",
+  "contentsAfterEdit": "def build_explainability(policy: dict, findings: dict, outcome: str) -&gt; dict:\r\n    fired_rules = []\r\n    \r\n    missing_signals = findings.get(\"missing_signals\", [])\r\n    pii_findings = findings.get(\"pii_findings\", [])\r\n    cardinality_findings = findings.get(\"cardinality_findings\", [])\r\n    dynamic_key_findings = findings.get(\"dynamic_key_findings\", [])\r\n    schema_violations = findings.get(\"schema_violations\", [])\r\n    telemetry_coverage_pct = findings.get(\"telemetry_coverage_pct\", 100.0)\r\n    \r\n    require_correlation_id = policy.get(\"obs.require_correlation_id\", False)\r\n    require_hw_timestamp = policy.get(\"obs.require_hw_timestamp\", False)\r\n    min_cov_warn = policy.get(\"obs.min_cov_warn\", 80.0)\r\n    min_cov_block = policy.get(\"obs.min_cov_block\", 70.0)\r\n    disallow_dynamic_keys = policy.get(\"obs.disallow_dynamic_keys\", False)\r\n    cardinality_outcome = policy.get(\"obs.cardinality_outcome\", \"soft_block\")\r\n    \r\n    # OBS-EXPL-0001 MissingCritical\r\n    critical_missing = []\r\n    if require_correlation_id:\r\n        if \"request_id\" in missing_signals:\r\n            critical_missing.append(\"request_id\")\r\n        if \"trace_id\" in missing_signals:\r\n            critical_missing.append(\"trace_id\")\r\n    if require_hw_timestamp and \"hw_ts_ms\" in missing_signals:\r\n        critical_missing.append(\"hw_ts_ms\")\r\n    \r\n    if critical_missing:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0001\",\r\n            \"threshold\": f\"require_correlation_id={require_correlation_id},require_hw_timestamp={require_hw_timestamp}\",\r\n            \"why\": f\"Missing critical signals: {','.join(sorted(critical_missing))}\"\r\n        })\r\n    \r\n    # OBS-EXPL-0004 PII\r\n    if pii_findings:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0004\",\r\n            \"threshold\": \"disallow_pii=true\",\r\n            \"why\": f\"Found {len(pii_findings)} PII/secret field(s)\"\r\n        })\r\n    \r\n    # OBS-EXPL-0005 DynamicKey\r\n    if dynamic_key_findings and disallow_dynamic_keys:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0005\",\r\n            \"threshold\": f\"disallow_dynamic_keys={disallow_dynamic_keys}\",\r\n            \"why\": f\"Found {len(dynamic_key_findings)} dynamic key(s)\"\r\n        })\r\n    \r\n    # OBS-EXPL-0006 HighCardinality\r\n    if cardinality_findings:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0006\",\r\n            \"threshold\": f\"cardinality_outcome={cardinality_outcome}\",\r\n            \"why\": f\"Found {len(cardinality_findings)} high-cardinality value(s)\"\r\n        })\r\n    \r\n    # OBS-EXPL-0007 SchemaViolation\r\n    if schema_violations:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0007\",\r\n            \"threshold\": \"enforce_schema=true\",\r\n            \"why\": f\"Found {len(schema_violations)} schema violation(s)\"\r\n        })\r\n    \r\n    # OBS-EXPL-0003 CoverageBelowBlock\r\n    if telemetry_coverage_pct &lt; min_cov_block:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0003\",\r\n            \"threshold\": f\"min_cov_block={min_cov_block}\",\r\n            \"why\": f\"Coverage {telemetry_coverage_pct:.2f}% below block threshold {min_cov_block}%\"\r\n        })\r\n    \r\n    # OBS-EXPL-0002 CoverageBelowWarn\r\n    if telemetry_coverage_pct &lt; min_cov_warn:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0002\",\r\n            \"threshold\": f\"min_cov_warn={min_cov_warn}\",\r\n            \"why\": f\"Coverage {telemetry_coverage_pct:.2f}% below warn threshold {min_cov_warn}%\"\r\n        })\r\n    \r\n    # OBS-EXPL-0008 MissingSignalsMinor\r\n    optional_missing = sorted(set(missing_signals) - set(critical_missing))\r\n    if optional_missing:\r\n        fired_rules.append({\r\n            \"rule_id\": \"OBS-EXPL-0008\",\r\n            \"threshold\": \"require_signals=optional\",\r\n            \"why\": f\"Missing {len(optional_missing)} optional signal(s): {','.join(optional_missing)}\"\r\n        })\r\n    \r\n    # Sort fired_rules by rule_id\r\n    fired_rules.sort(key=lambda x: x[\"rule_id\"])\r\n    \r\n    # Determine smallest_fix\r\n    smallest_fix = {\"type\": \"none\", \"action_id\": \"\", \"summary\": \"\"}\r\n    \r\n    if pii_findings:\r\n        smallest_fix = {\r\n            \"type\": \"redaction\",\r\n            \"action_id\": \"zeroui.m5.redactPii\",\r\n            \"summary\": \"Redact PII/secret fields\"\r\n        }\r\n    elif dynamic_key_findings and disallow_dynamic_keys:\r\n        smallest_fix = {\r\n            \"type\": \"rewrite\",\r\n            \"action_id\": \"zeroui.m5.rewriteLabels\",\r\n            \"summary\": \"Rewrite dynamic label keys to static key + value field\"\r\n        }\r\n    elif schema_violations:\r\n        smallest_fix = {\r\n            \"type\": \"schema_fix\",\r\n            \"action_id\": \"zeroui.m5.fixSchema\",\r\n            \"summary\": \"Rename/normalize fields to schema\"\r\n        }\r\n    elif critical_missing or missing_signals or telemetry_coverage_pct &lt; min_cov_warn or telemetry_coverage_pct &lt; min_cov_block:\r\n        smallest_fix = {\r\n            \"type\": \"snippet\",\r\n            \"action_id\": \"zeroui.m5.insertObsSnippet\",\r\n            \"summary\": \"Add required observability signals\"\r\n        }\r\n    \r\n    return {\r\n        \"fired_rules\": fired_rules,\r\n        \"smallest_fix\": smallest_fix\r\n    }\r\n\r\n"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "edge/m5_observability/gates/outcome_engine.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "f38a8937-c2c6-49ac-9d1e-fcfe8a993ba8",
+  "codeblock": {
+    "uri": {
+      "scheme": "file",
+      "authority": "",
+      "path": "/a:/Module-5/Module-5/edge/m5_observability/gates/outcome_engine.py",
+      "query": "",
+      "fragment": "",
+      "_formatted": "file:///a%3A/Module-5/Module-5/edge/m5_observability/gates/outcome_engine.py",
+      "_fsPath": "a:\\Module-5\\Module-5\\edge\\m5_observability\\gates\\outcome_engine.py"
+    },
+    "codeblockId": "f38a8937-c2c6-49ac-9d1e-fcfe8a993ba8",
+    "codeBlockIdx": 0,
+    "content": "def eval_outcome(\r\n    missing_signals: list[str],\r\n    pii_findings: list[str],\r\n    cardinality_findings: list[str],\r\n    require_correlation_id: bool,\r\n    require_hw_timestamp: bool,\r\n    min_cov_warn: float,\r\n    min_cov_block: float,\r\n    telemetry_coverage_pct: float,\r\n) -&gt; dict:\r\n    missing_sorted = sorted(missing_signals)\r\n    missing_csv = \",\".join(missing_sorted) if missing_sorted else \"-\"\r\n    cov_rounded = round(telemetry_coverage_pct, 2)\r\n    \r\n    # Rule 1: Critical correlation (and timestamp) missing\r\n    if require_correlation_id and \"request_id\" in missing_signals and \"trace_id\" in missing_signals:\r\n        critical_missing = [\"request_id\", \"trace_id\"]\r\n        if require_hw_timestamp and \"hw_ts_ms\" in missing_signals:\r\n            critical_missing.append(\"hw_ts_ms\")\r\n        critical_missing = sorted(critical_missing)\r\n        return {\r\n            \"outcome\": \"hard_block\",\r\n            \"rule_id\": \"OBS-GATE-0001\",\r\n            \"rationale\": f\"OBS: HARD [missing_critical={','.join(critical_missing)}; pii={len(pii_findings)}]\"\r\n        }\r\n    \r\n    # Rule 2: Hardware timestamp missing\r\n    if require_hw_timestamp and \"hw_ts_ms\" in missing_signals:\r\n        critical_missing = [\"hw_ts_ms\"]\r\n        return {\r\n            \"outcome\": \"hard_block\",\r\n            \"rule_id\": \"OBS-GATE-0001\",\r\n            \"rationale\": f\"OBS: HARD [missing_critical={','.join(critical_missing)}; pii={len(pii_findings)}]\"\r\n        }\r\n    \r\n    # Rule 3: PII findings\r\n    if pii_findings:\r\n        critical_missing = sorted([s for s in missing_signals if s in [\"request_id\", \"trace_id\", \"hw_ts_ms\"]])\r\n        critical_csv = \",\".join(critical_missing) if critical_missing else \"-\"\r\n        return {\r\n            \"outcome\": \"hard_block\",\r\n            \"rule_id\": \"OBS-GATE-0001\",\r\n            \"rationale\": f\"OBS: HARD [missing_critical={critical_csv}; pii={len(pii_findings)}]\"\r\n        }\r\n    \r\n    # Rule 4: Cardinality findings\r\n    if cardinality_findings:\r\n        return {\r\n            \"outcome\": \"soft_block\",\r\n            \"rule_id\": \"OBS-GATE-0001\",\r\n            \"rationale\": f\"OBS: SOFT [coverage={cov_rounded}; missing={missing_csv}; card={len(cardinality_findings)}]\"\r\n        }\r\n    \r\n    # Rule 5: Coverage below block threshold\r\n    if telemetry_coverage_pct &lt; min_cov_block:\r\n        return {\r\n            \"outcome\": \"soft_block\",\r\n            \"rule_id\": \"OBS-GATE-0001\",\r\n            \"rationale\": f\"OBS: SOFT [coverage={cov_rounded}; missing={missing_csv}; card=0]\"\r\n        }\r\n    \r\n    # Rule 6: Coverage below warn threshold OR missing signals\r\n    if telemetry_coverage_pct &lt; min_cov_warn or len(missing_signals) &gt; 0:\r\n        return {\r\n            \"outcome\": \"warn\",\r\n            \"rule_id\": \"OBS-GATE-0001\",\r\n            \"rationale\": f\"OBS: WARN [coverage={cov_rounded}; missing={missing_csv}]\"\r\n        }\r\n    \r\n    # Rule 7: Pass\r\n    return {\r\n        \"outcome\": \"pass\",\r\n        \"rule_id\": \"OBS-GATE-0001\",\r\n        \"rationale\": \"OBS: PASS\"\r\n    }\r\n\r\n",
+    "languageId": "python"
+  }
+}
+```
+Result:
+
+```json
+{
+  "diff": {
+    "chunks": [
+      {
+        "diffString": "      cov_rounded = round(telemetry_coverage_pct, 2)\r\n      \r\n-     # Rule 1: Critical correlation missing\r\n+     # Rule 1: Critical correlation (and timestamp) missing\r\n      if require_correlation_id and \"request_id\" in missing_signals and \"trace_id\" in missing_signals:\r\n-         critical_missing = sorted([\"request_id\", \"trace_id\"])\r\n+         critical_missing = [\"request_id\", \"trace_id\"]\r\n+         if require_hw_timestamp and \"hw_ts_ms\" in missing_signals:\r\n+             critical_missing.append(\"hw_ts_ms\")\r\n+         critical_missing = sorted(critical_missing)\r\n          return {\r\n              \"outcome\": \"hard_block\",\r",
+        "oldStart": 13,
+        "newStart": 13,
+        "oldLines": 7,
+        "newLines": 10,
+        "linesRemoved": 2,
+        "linesAdded": 5
+      }
+    ],
+    "editor": "EDITOR_AI"
+  },
+  "shouldAutoFixLints": true,
+  "resultForModel": "Success. Updated the following files:\nM edge/m5_observability/gates/outcome_engine.py",
+  "contentsAfterEdit": "def eval_outcome(\r\n    missing_signals: list[str],\r\n    pii_findings: list[str],\r\n    cardinality_findings: list[str],\r\n    require_correlation_id: bool,\r\n    require_hw_timestamp: bool,\r\n    min_cov_warn: float,\r\n    min_cov_block: float,\r\n    telemetry_coverage_pct: float,\r\n) -&gt; dict:\r\n    missing_sorted = sorted(missing_signals)\r\n    missing_csv = \",\".join(missing_sorted) if missing_sorted else \"-\"\r\n    cov_rounded = round(telemetry_coverage_pct, 2)\r\n    \r\n    # Rule 1: Critical correlation (and timestamp) missing\r\n    if require_correlation_id and \"request_id\" in missing_signals and \"trace_id\" in missing_signals:\r\n        critical_missing = [\"request_id\", \"trace_id\"]\r\n        if require_hw_timestamp and \"hw_ts_ms\" in missing_signals:\r\n            critical_missing.append(\"hw_ts_ms\")\r\n        critical_missing = sorted(critical_missing)\r\n        return {\r\n            \"outcome\": \"hard_block\",\r\n            \"rule_id\": \"OBS-GATE-0001\",\r\n            \"rationale\": f\"OBS: HARD [missing_critical={','.join(critical_missing)}; pii={len(pii_findings)}]\"\r\n        }\r\n    \r\n    # Rule 2: Hardware timestamp missing\r\n    if require_hw_timestamp and \"hw_ts_ms\" in missing_signals:\r\n        critical_missing = [\"hw_ts_ms\"]\r\n        return {\r\n            \"outcome\": \"hard_block\",\r\n            \"rule_id\": \"OBS-GATE-0001\",\r\n            \"rationale\": f\"OBS: HARD [missing_critical={','.join(critical_missing)}; pii={len(pii_findings)}]\"\r\n        }\r\n    \r\n    # Rule 3: PII findings\r\n    if pii_findings:\r\n        critical_missing = sorted([s for s in missing_signals if s in [\"request_id\", \"trace_id\", \"hw_ts_ms\"]])\r\n        critical_csv = \",\".join(critical_missing) if critical_missing else \"-\"\r\n        return {\r\n            \"outcome\": \"hard_block\",\r\n            \"rule_id\": \"OBS-GATE-0001\",\r\n            \"rationale\": f\"OBS: HARD [missing_critical={critical_csv}; pii={len(pii_findings)}]\"\r\n        }\r\n    \r\n    # Rule 4: Cardinality findings\r\n    if cardinality_findings:\r\n        return {\r\n            \"outcome\": \"soft_block\",\r\n            \"rule_id\": \"OBS-GATE-0001\",\r\n            \"rationale\": f\"OBS: SOFT [coverage={cov_rounded}; missing={missing_csv}; card={len(cardinality_findings)}]\"\r\n        }\r\n    \r\n    # Rule 5: Coverage below block threshold\r\n    if telemetry_coverage_pct &lt; min_cov_block:\r\n        return {\r\n            \"outcome\": \"soft_block\",\r\n            \"rule_id\": \"OBS-GATE-0001\",\r\n            \"rationale\": f\"OBS: SOFT [coverage={cov_rounded}; missing={missing_csv}; card=0]\"\r\n        }\r\n    \r\n    # Rule 6: Coverage below warn threshold OR missing signals\r\n    if telemetry_coverage_pct &lt; min_cov_warn or len(missing_signals) &gt; 0:\r\n        return {\r\n            \"outcome\": \"warn\",\r\n            \"rule_id\": \"OBS-GATE-0001\",\r\n            \"rationale\": f\"OBS: WARN [coverage={cov_rounded}; missing={missing_csv}]\"\r\n        }\r\n    \r\n    # Rule 7: Pass\r\n    return {\r\n        \"outcome\": \"pass\",\r\n        \"rule_id\": \"OBS-GATE-0001\",\r\n        \"rationale\": \"OBS: PASS\"\r\n    }\r\n\r\n"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
+<details><summary>Tool use: **run_terminal_cmd** • Run command: cd A:\Module-5\Module-5; python -m pytest -q tests/m5_observability/edge/test_f5_explainability.py tests/m5_observability/edge/test_f5_outcome_engine.py</summary>
+
+```bash
+cd A:\Module-5\Module-5; python -m pytest -q tests/m5_observability/edge/test_f5_explainability.py tests/m5_observability/edge/test_f5_outcome_engine.py
+```
+
+```
+.................                                                        [100%]
+17 passed in 0.12s
+
+```
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
+<details><summary>Tool use: **run_terminal_cmd** • Run command: cd A:\Module-5\Module-5; python -m pytest</summary>
+
+```bash
+cd A:\Module-5\Module-5; python -m pytest
+```
+
+```
+============================= test session starts =============================
+platform win32 -- Python 3.14.2, pytest-9.0.2, pluggy-1.6.0
+rootdir: A:\Module-5\Module-5
+collected 151 items
+
+tests\m5_observability\e2e\test_f8_e2e_flow.py ..                        [  1%]
+tests\m5_observability\edge\test_f1_cardinality.py ....                  [  3%]
+tests\m5_observability\edge\test_f1_coverage.py .....                    [  7%]
+tests\m5_observability\edge\test_f1_pii.py ..                            [  8%]
+tests\m5_observability\edge\test_f1_required_signals.py ....             [ 11%]
+tests\m5_observability\edge\test_f1_surfaces.py .....                    [ 14%]
+tests\m5_observability\edge\test_f2_correlation_injector.py .........    [ 20%]
+tests\m5_observability\edge\test_f2_logging_inserter.py .......          [ 25%]
+tests\m5_observability\edge\test_f2_metrics_inserter.py ...........      [ 32%]
+tests\m5_observability\edge\test_f2_smoke_runner.py .......              [ 37%]
+tests\m5_observability\edge\test_f3_dynamic_key_blocker.py ....          [ 39%]
+tests\m5_observability\edge\test_f3_high_cardinality_gate.py ....        [ 42%]
+tests\m5_observability\edge\test_f3_pii_redaction_quickfix.py ..         [ 43%]
+tests\m5_observability\edge\test_f3_policy_loader.py ...                 [ 45%]
+tests\m5_observability\edge\test_f3_schema_linter.py ...                 [ 47%]
+tests\m5_observability\edge\test_f5_ci_gate_cli_sim.py ...               [ 49%]
+tests\m5_observability\edge\test_f5_explainability.py ...                [ 51%]
+tests\m5_observability\edge\test_f5_outcome_engine.py ..............     [ 60%]
+tests\m5_observability\edge\test_f6_actor.py .......                     [ 65%]
+tests\m5_observability\edge\test_f6_parity.py ...........                [ 72%]
+tests\m5_observability\edge\test_f6_pc1_hooks.py .......                 [ 77%]
+tests\m5_observability\edge\test_f7_export_ci.py .                       [ 78%]
+tests\m5_observability\edge\test_f7_receipt_schema.py ...                [ 80%]
+tests\m5_observability\edge\test_f7_receipt_signature.py .....           [ 83%]
+tests\m5_observability\edge\test_f7_receipt_writer.py ....               [ 86%]
+tests\m5_observability\edge\test_f8_m1_linkage.py .........              [ 92%]
+tests\m5_observability\edge\test_f8_m2_suppression.py ..........         [ 98%]
+tests\m5_observability\edge\test_f8_m4_hook.py ..                        [100%]
+
+============================= 151 passed in 0.76s =============================
+
+```
+</details>
+</tool-use>
+
+---
+
+All pytest suites now pass.
+
+- Fixed explainability to emit optional-signal rule alongside critical misses.
+- Fixed outcome engine rationale to include `hw_ts_ms` when required with correlation IDs.
+
+Command run:
+- `python -m pytest` → **151 passed**.
+
+---
+
+_**User (2025-12-26 07:15Z)**_
+
+why empty Module-5 folder is created??
+
+
+---
+
+_**Agent (model gpt-5.1-codex-max, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+**Explaining empty folder as git submodule**
+
+The empty Module-5 folder is a git submodule placeholder not yet cloned or initialized. Running `git submodule update --init --recursive` will fetch its contents; otherwise, it remains an empty directory safely removable if unused.</details></think>
+
+---
+
+That `Module-5/` entry is a git submodule placeholder. It points at commit `347c9058…` but hasn’t been initialized, so the directory looks empty. If you want the contents, run from repo root:
+
+```
+git submodule update --init --recursive
+```
+
+If it’s intentional to leave the submodule unpopulated, you can ignore the empty directory.
+
+---
+
+_**User (2025-12-26 07:15Z)**_
+
+analyze the image and fix it. when i run the extension then it is showing this fix iwant extension working 
+
+this module 5 — Monitoring & Observability Gaps
+Plain-English overview (same format)
+●	What it does
+ Checks whether new/changed endpoints, handlers, jobs, and critical paths emit the right logs and metrics (golden signals).
+ Points out what’s missing and offers one-click, low-noise snippets to add them.
+
+●	When you see it
+ On save, pre-commit, and PR update for diffs touching endpoints/handlers/background jobs.
+ Triggers only where tracking is missing or unsafe (PII, high cardinality).
+
+●	What you see
+ A tight list of missing signals (e.g., latency, status, error, request/trace IDs) and suggested snippet templates.
+ A small coverage bar (per change) showing before/after telemetry coverage %.
+
+●	What you can do
+ One click to insert a ready-to-use logging/metrics snippet (PC-1 attested).
+ One click to run observability smoke tests (no external egress) and view receipts.
+
+●	Why it matters
+ Clear tracking shortens MTTR and removes guesswork during incidents.
+ Golden signals + correlation IDs make guard-window rollbacks (M1) precise and fast.
+
+________________________________________
+Got it—here are the Features → Subfeatures for Module 5 — Monitoring & Observability Gaps, in your two-line, paste-ready style.
+Module 5 — Monitoring & Observability Gaps — Features & Subfeatures
+F1. Telemetry Gap Detection
+●	SF1.1 Required-Signal Checker
+ Maps diff → endpoints/handlers/jobs and verifies required signals (latency_ms, status, error_code, request_id/trace_id, hw_ts_ms).
+ Emits a precise checklist per endpoint with present vs missing items.
+
+●	SF1.2 PII/Secrets Detector
+ Scans log/metric arguments for secrets and PII patterns pre-commit.
+ Flags violations with rule IDs and points to safe redaction/tokenization.
+
+●	SF1.3 Cardinality Bomb Detector
+ Detects dynamic keys and high-card labels that can blow up metrics stores.
+ Highlights offending labels and proposes safe, bounded alternatives.
+
+●	SF1.4 Telemetry Coverage Calculator
+ Computes telemetry_coverage_pct for changed code paths.
+ Publishes before/after coverage to receipts and the UI bar.
+
+F2. Snippet Generation (Low-Noise)
+●	SF2.1 Logging Snippet Generator
+ Inserts minimal, structured logs with correlation IDs and hw_ts_ms.
+ Aligns fields to repo conventions; includes CC_OBS_SNIPPET marker.
+
+●	SF2.2 Metrics Snippet Generator
+ Adds counters/histograms/timers with safe default sample rate.
+ Ensures stable label sets and policy-approved names.
+
+●	SF2.3 Correlation/Tracing Injector
+ Wires request_id/trace_id propagation if missing.
+ Provides tiny middleware/helper stubs where appropriate.
+
+●	SF2.4 Safe Sample-Rate Tuner
+ Suggests or applies policy-bound sampling for noisy endpoints.
+ Records decisions in receipts for future tuning.
+
+F3. Schema & Policy Validation
+●	SF3.1 Schema Linter
+ Validates log/metric field names and types against project schemas.
+ Blocks non-conformant fields and suggests rename/normalize fixes.
+
+●	SF3.2 High-Cardinality Gate
+ Enforces warn/block thresholds for label cardinality.
+ Explains which labels breached limits and why.
+
+●	SF3.3 Dynamic-Key Blocker
+ Rejects structures like labels[user.${id}].
+ Auto-rewrites to static keys with value fields when possible.
+
+●	SF3.4 PII Redaction Quick-Fix
+ One-click replace with hashed/opaque forms or drop fields safely.
+ All writes are PC-1 attested with inverse patch available.
+
+F4. Golden-Signals Coverage & Viz
+●	SF4.1 Coverage Bar (Per Change)
+ Renders required signals present vs missing for touched endpoints.
+ Links each gap to a one-click snippet to close it.
+
+●	SF4.2 Before/After Delta Reporter
+ Shows telemetry coverage delta after snippet insertion.
+ Persists the delta to receipts for ROI calculations.
+
+F5. Gates & Explainability
+●	SF5.1 Outcome Engine (PASS/WARN/SOFT/HARD)
+ Applies transparent thresholds for missing/unsafe telemetry.
+ Honors gate_mode; blocks only on critical gaps or unsafe patterns.
+
+●	SF5.2 Rule Explainability Panel
+ Lists the exact constraints that fired and their thresholds.
+ Presents the smallest acceptable snippet/fix to pass.
+
+F6. Agent Parity & Controls
+●	SF6.1 Agent Telemetry Checks
+ Runs identical rules on agent PRs with provenance captured.
+ Prevents agents from skipping required signals or adding noisy fields.
+
+●	SF6.2 Dual-Channel PC-1 for Agent Writes
+ Requires dual approval for agent snippet insert/remove.
+ Stores approvers and outcomes in signed receipts.
+
+F7. Evidence & Receipts
+●	SF7.1 Receipt Writer (Gaps/Snippets/Coverage)
+ Logs signals_missing[], telemetry_coverage_pct, cardinality/PII findings.
+ Anchors entries with monotonic hardware time and policy snapshot.
+
+●	SF7.2 Privacy-Safe CI Artifacts
+ Redacts or hashes sensitive field names in exported receipts.
+ Keeps a reversible map only on device for developer readability.
+
+F8. Cross-Module Glue
+●	SF8.1 M2 Conflict-Hot Suppression
+ If M2 ≥ WARN on the same files, switch to execution_mode="explain_only".
+ Re-enable snippet writes after rebase when M2=PASS.
+
+●	SF8.2 M1 Guard-Window Synergy
+ Guarantees required signals for fast incident triage and rollback decisions.
+ Feeds coverage metrics into M1 risk and post-rollback evidence.
+
+●	SF8.3 M3/M4 Compatibility Hooks
+ CC_OBS_SNIPPET marker prevents M3 false positives.
+ M4 can generate tiny obs smoke tests to assert required fields exist.
+
+________________________________________
+Deterministic decision rules (canonical strings)
+●	PASS — Required signals present; schema/cardinality safe; coverage ≥ policy.
+
+●	WARN — Minor shortfall (e.g., missing 1 signal or small coverage drop); snippet suggested; merge allowed.
+
+●	SOFT — Significant shortfall or unsafe but autocorrectable issue; fix/snippet before merge (gate-mode may allow override).
+
+●	HARD — Critical missing signals (no correlation ID/hw_ts) or PII/high-card labels; merge blocked.
+
+●	PC-1 — Any auto-insertion/removal/redaction uses Trusted Actuation.
+
+Problems panel codes (reserve namespace):
+ CC-OB-0101 PASS, CC-OB-0201 WARN, CC-OB-0301 SOFT, CC-OB-0401 HARD.
+________________________________________
+PolicyBundle (versioned; overridable)
+{
+  "module": "observability",
+  "version": "1.0.0",
+  "policy": {
+    "obs.required_signals": ["latency_ms","status","error_code","request_id","trace_id","hw_ts_ms"],
+    "obs.min_telemetry_coverage_warn": 0.8,
+    "obs.min_telemetry_coverage_block": 0.6,
+    "obs.require_correlation_id": true,
+    "obs.require_hw_timestamp": true,
+    "obs.max_label_cardinality_warn": 100,
+    "obs.max_label_cardinality_block": 500,
+    "obs.disallow_dynamic_keys": true,
+    "obs.sample_rate_default": 1.0,
+    "obs.generated_marker_comment": "CC_OBS_SNIPPET",
+    "gate_mode": "Warn"
+  }
+}
+
+________________________________________
+Receipts (JSONL — same family as M1–M4; M5 specifics highlighted)
+{
+  "module": "M5_observability_v1",
+  "gate_id": "observability_v1",
+  "decision": {
+    "outcome": "pass|warn|soft_block|hard_block",
+    "rationale": "OBS: <canonical string> [coverage=0.72; missing=latency_ms,trace_id; high_card=owners.*]"
+  },
+  "actor": { "type": "human|agent", "id": "sha-or-oidc-sub", "client": "vscode|ci|bot" },
+  "inputs": {
+    "branch": "feature/new-endpoint",
+    "related_pr": 789,
+    "files_touched": ["src/handlers/orders.ts"],
+    "endpoints_touched": ["/orders/{id}:GET"],
+    "signals_present": ["status","error_code"],
+    "signals_missing": ["latency_ms","trace_id","hw_ts_ms"],
+    "telemetry_coverage_pct": 0.72,
+    "pii_findings": [],
+    "cardinality_findings": ["dynamic_key: owners.{userId}"],
+    "conflict_hotspot_ref": []
+  },
+  "actions": {
+    "snippet_inserted": true,
+    "redactions_applied": ["owners.{userId} -> owners.user_id"],
+    "notes": ["added CC_OBS_SNIPPET block at line 87"]
+  },
+  "execution_mode": "normal|explain_only",
+  "policy_snapshot_id": "PB-2025-09-20T09:00Z",
+  "pc1_attested": true,
+  "pc1": { "authoriser_gate": "ok", "rate_limiter": "ok", "dual_channel": "ok" },
+  "timestamps": { "hw_monotonic_ms": 0, "hw_clock_khz": 1 },
+  "signature": { "algo": "stub-sha256", "value": "<sig>" },
+  "roi_tags": ["observability_gain","debug_minutes_saved"]
+}
+
+________________________________________
+IDE & CI surfaces (consistent wiring)
+●	IDE (VS Code): Status Bar OBS pill; Problems codes CC-OB-xxxx; Decision Panel shows coverage bar, missing signals, cardinality/PII findings; Quick Fix: Insert Snippet, Apply Redaction, Run Obs Smoke Tests.
+
+●	CI: coaxcraft-observability-gate.yml runs headless checks; uploads receipt_m5.jsonl; fails on SOFT/HARD per gate_mode.
+
+________________________________________
+Cross-module glue (integration-safe)
+●	M5 ↔ M1 (Release/Guard window)
+ Guard-window actions depend on reliable signals; if coverage < block threshold, M1 risk ↑ and may require an observability hotfix snippet (PC-1).
+ Rollback receipts link to M5 coverage to show “triage-readiness” post-deploy.
+
+●	M5 ↔ M2 (Merge Conflicts)
+ If a file is conflict-hot (M2 ≥ WARN), M5 switches to execution_mode=explain_only (no snippet writes).
+ After rebase (M2=PASS), M5 re-evaluates and allows snippet insertion.
+
+●	M5 ↔ M3 (Tech Debt)
+ Snippets carry // CC_OBS_SNIPPET marker so M3 doesn’t flag them as debt.
+ If M3 applies a micro-refactor around a snippet, M5 re-checks coverage and schema.
+
+●	M5 ↔ M4 (QA & Testing)
+ M4 can auto-generate observability smoke tests for new handlers (assert log fields/metrics exist).
+ Coverage deltas from M5 appear in M4 receipts so reviewers see test + telemetry readiness together.
+
+●	PC-1 (Trusted Actuation)
+ Required for snippet insertions, redactions, and any write to code or protected paths; hardware-timestamped and signed.
+
+________________________________________
+Preflight integration checklist (apply before interns ship)
+1.	Outcome enum & Problems namespaces frozen: CC-OB-01/02/03/04xx.
+
+2.	Shared receipt blocks present across M1–M5: actor, pc1, timestamps.
+
+3.	Aggregator uses same severity order; primary_metric here is telemetry_coverage_pct.
+
+4.	Suppression rule (M2→M5) implemented (explain_only when conflict-hot).
+
+5.	PolicyBundle keys and casing match the table above; gate_mode honoured.
+
+6.	Privacy: PII/secrets redaction checks shared with M1-JTBD-4 guardrail logic.
+
+7.	Determinism: Stable endpoint/handler discovery and coverage calculation (document the algorithm; emit selection_seed if needed).
+
+________________________________________
+Acceptance tests (intern-ready)
+1.	Happy path: New GET handler with all required signals → PASS (CC-OB-0101); receipt shows coverage ≥ policy.
+
+2.	Minor gap: Missing trace_id → WARN; one-click snippet → re-run → PASS.
+
+3.	Critical gap: No correlation ID and no hw_ts_ms → HARD; merge blocked until fixed.
+
+4.	High cardinality: Dynamic label user.{id} detected → SOFT; quick-fix rename to user_id lowers cardinality → PASS.
+
+5.	Conflict-hot suppression: Overlap on file (M2=WARN) → M5 explain_only no write; after rebase (M2=PASS), snippet allowed.
+
+6.	Agent parity: Agent PR misses latency metric → SOFT; agent insert requires PC-1 dual-channel; receipt shows actor.type=agent.
+
+7.	QA glue: M4 observability smoke test verifies log fields/metrics exist; both receipts link same policy_snapshot_id.
+
+________________________________________
+Go / No-Go
+GO (GREEN) — With the checklist above, M5 is integration-safe with M1–M4.
+ If you want, I can drop a paste-ready bundle next (PolicyBundle.json, Problems code map, CI workflow stub, sample receipts, and a tiny aggregator function) so your interns can commit in one pass.
+
+
+
+---
+
+_**Agent (model gpt-5.1-codex-max, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+**Identifying missing build step causing activation failure**
+
+The extension fails to activate because the compiled `dist/extension.js` is missing; adding a build step with `npx tsc -p .` or a `compile` script running `tsc -p .` will generate it. Once built, `npm install` then `npx tsc -p .`, followed by launching the extension will resolve the issue with activation and view container errors.</details></think>
+
+---
+
+VS Code can’t find `dist/extension.js`, so activation fails and your view container falls back to Explorer. Just build the extension from the repo root.
+
+Run in `a:\Module-5\Module-5`:
+```
+npm install
+npx tsc -p .
+```
+(or add `"compile": "tsc -p ."` and run `npm run compile`)
+
+Then relaunch the Extension Development Host (F5). That will generate `dist/extension.js` and the views container (`zeroUI.container` / `zeroUI.view.main`) will load instead of erroring.
+
+---
+

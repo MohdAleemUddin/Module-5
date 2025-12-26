@@ -17,7 +17,8 @@
     "onStartupFinished"
   ],
   "scripts": {
-    "test": "mocha -r ts-node/register --ui tdd \"src/**/*.test.ts\""
+    "test": "mocha -r ts-node/register --ui tdd \"src/**/*.test.ts\"",
+    "compile": "tsc -p ."
   },
   "contributes": {
     "commands": [

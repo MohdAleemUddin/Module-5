@@ -12,9 +12,12 @@ def eval_outcome(
     missing_csv = ",".join(missing_sorted) if missing_sorted else "-"
     cov_rounded = round(telemetry_coverage_pct, 2)
     
-    # Rule 1: Critical correlation missing
+    # Rule 1: Critical correlation (and timestamp) missing
     if require_correlation_id and "request_id" in missing_signals and "trace_id" in missing_signals:
-        critical_missing = sorted(["request_id", "trace_id"])
+        critical_missing = ["request_id", "trace_id"]
+        if require_hw_timestamp and "hw_ts_ms" in missing_signals:
+            critical_missing.append("hw_ts_ms")
+        critical_missing = sorted(critical_missing)
         return {
             "outcome": "hard_block",
             "rule_id": "OBS-GATE-0001",

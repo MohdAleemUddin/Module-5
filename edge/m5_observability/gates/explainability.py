@@ -81,11 +81,12 @@ def build_explainability(policy: dict, findings: dict, outcome: str) -> dict:
         })
     
     # OBS-EXPL-0008 MissingSignalsMinor
-    if missing_signals and not critical_missing:
+    optional_missing = sorted(set(missing_signals) - set(critical_missing))
+    if optional_missing:
         fired_rules.append({
             "rule_id": "OBS-EXPL-0008",
             "threshold": "require_signals=optional",
-            "why": f"Missing {len(missing_signals)} optional signal(s): {','.join(sorted(missing_signals))}"
+            "why": f"Missing {len(optional_missing)} optional signal(s): {','.join(optional_missing)}"
         })
     
     # Sort fired_rules by rule_id

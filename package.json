@@ -1,0 +1,38 @@
+{
+  "name": "zeroui-m5",
+  "version": "0.0.1",
+  "description": "ZeroUI Module 5 - Monitoring & Observability Gaps",
+  "main": "./dist/extension.js",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "zeroui.m5.openPanel",
+        "title": "Open M5 Panel"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "zeroUI.container",
+          "title": "ZeroUI",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "zeroUI.container": [
+        {
+          "id": "zeroUI.view.main",
+          "name": "Module 5"
+        }
+      ]
+    }
+  }
+}
+

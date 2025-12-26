@@ -7,10 +7,10 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   const treeDataProvider = new M5TreeDataProvider();
-  vscode.window.registerTreeDataProvider('zeroUI.view.main', treeDataProvider);
+  const treeView = vscode.window.registerTreeDataProvider('zeroUI.view.main', treeDataProvider);
 
   registerPiiRedaction(context);
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(disposable, treeView);
 }
 
 export function deactivate() {}

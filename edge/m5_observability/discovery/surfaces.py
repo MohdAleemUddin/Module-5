@@ -82,4 +82,3 @@ def discover_surfaces(changed_files: list[str], unified_diff: str) -> dict:
         "handlers_touched": sorted(list(handlers)),
         "jobs_touched": sorted(list(jobs))
     }
-

@@ -81,4 +81,3 @@ def test_negative_case():
     assert result["endpoints_touched"] == []
     assert result["handlers_touched"] == []
     assert result["jobs_touched"] == []
-

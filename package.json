@@ -1,0 +1,37 @@
+{
+  "name": "zeroui-m5",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "zeroui.m5.openPanel",
+        "title": "Open M5 Panel"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "zeroUI.container",
+          "title": "ZeroUI",
+          "icon": "$(beaker)"
+        }
+      ]
+    },
+    "views": {
+      "zeroUI.container": [
+        {
+          "id": "zeroUI.view.main",
+          "name": "Main"
+        }
+      ]
+    }
+  }
+}
+

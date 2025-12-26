@@ -2679,23 +2679,545 @@ move that gitignore file in the required directory so that it can ignore all the
 
 _**Agent (model gpt-5.1-codex-max, mode Agent)**_
 
+<think><details><summary>Thought Process</summary>
+**Confirming .gitignore placement**
+
+The tests/.gitignore was removed, so I’ll check the root .gitignore (currently 8 lines) to see if it covers test files and add entries there if needed.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: .gitignore</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Restoring .gitignore in tests directory**
+
+The tests/.gitignore file was deleted but its ignore patterns likely still need to apply specifically within the tests folder, so I'll restore that file with the original ignore entries to maintain targeted ignoring in that directory.</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "tests/.gitignore"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "bb791cb7-3be5-4cd0-b418-af0f5989ecf4",
+  "codeblock": {
+    "uri": {
+      "scheme": "file",
+      "authority": "",
+      "path": "/a:/Module-5/Module-5/tests/.gitignore",
+      "query": "",
+      "fragment": "",
+      "_formatted": "file:///a%3A/Module-5/Module-5/tests/.gitignore",
+      "_fsPath": "a:\\Module-5\\Module-5\\tests\\.gitignore"
+    },
+    "codeblockId": "bb791cb7-3be5-4cd0-b418-af0f5989ecf4",
+    "codeBlockIdx": 0,
+    "content": "node_modules/\ndist/\ncoverage/\n.nyc_output/\n*.log\n.DS_Store\n",
+    "languageId": "ignore"
+  }
+}
+```
+Result:
+
+```json
+{
+  "diff": {
+    "chunks": [
+      {
+        "diffString": "- \n+ node_modules/\n+ dist/\n+ coverage/\n+ .nyc_output/\n+ *.log\n+ .DS_Store\n+ ",
+        "oldStart": 1,
+        "newStart": 1,
+        "oldLines": 1,
+        "newLines": 7,
+        "linesRemoved": 1,
+        "linesAdded": 7
+      }
+    ],
+    "editor": "EDITOR_AI"
+  },
+  "shouldAutoFixLints": true,
+  "resultForModel": "Success. Updated the following files:\nM tests/.gitignore",
+  "contentsAfterEdit": "node_modules/\r\ndist/\r\ncoverage/\r\n.nyc_output/\r\n*.log\r\n.DS_Store\r\n\r\n"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+Restored a `tests/.gitignore` in the tests directory so those entries are ignored locally:
+
+```
+node_modules/
+dist/
+coverage/
+.nyc_output/
+*.log
+.DS_Store
+```
+
+Root `.gitignore` remains unchanged.
+
+---
+
+_**User (2025-12-26 07:15Z)**_
+
+[M5.F8.MT4 — M4 Hook: Smoke Test Trigger + Receipt Link (policy_snapshot_id)]
+Strict, careful processing demanded: no hallucination, no assumptions, no sycophancy, no fiction. Do what is asked. 100% Accurate. Minimal tokens.
+
+Implement MT4 only (Python 3.11 + pytest). Do NOT implement other F8 MTs.
+
+Touch ONLY:
+- edge/m5_observability/checks/smoke_tests.py
+- edge/m5_observability/integrations/m4_hook.py
+- tests/m5_observability/edge/test_f8_m4_hook.py
+(+ __init__.py only if imports require)
+
+Implement:
+1) def run_m5_smoke_tests(policy_snapshot_id: str) -> dict
+   Return a deterministic M5 receipt-like dict (single object, not JSONL):
+   {
+     "module":"M5_observability_v1",
+     "gate_id":"observability_v1",
+     "decision":{"outcome":"pass","rationale":"OBS: SMOKE_TESTS_PASS"},
+     "actor":{"type":"agent","id":"m4","client":"ci"},
+     "inputs":{"checks":["smoke_stub"],"telemetry_coverage_pct":0.0,"signals_missing":[]},
+     "execution_mode":"normal",
+     "policy_snapshot_id": policy_snapshot_id,
+     "timestamps":{"hw_monotonic_ms": 1},
+     "signature":{"algo":"stub-sha256","value":"x"}
+   }
+   Notes: keep constants; deterministic; no real filesystem/network; no time reads.
+
+2) def handle_m4_smoke_trigger(trigger: dict) -> dict
+   Rules:
+   - trigger must include "policy_snapshot_id" as non-empty string else ValueError.
+   - Call run_m5_smoke_tests(trigger["policy_snapshot_id"]) exactly once.
+   - Return its dict unchanged.
+
+Integration test (pytest):
+- trigger={"policy_snapshot_id":"PB-123"} => result.policy_snapshot_id == "PB-123"
+- ensure smoke tests ran: result.inputs.checks == ["smoke_stub"]
+- “both receipts share snapshot id”: create a dummy M4 receipt dict in test with policy_snapshot_id="PB-123" and assert equality with M5 result.
+- Optional: monkeypatch run_m5_smoke_tests to count calls; assert called once.
+
+Run:
+pytest -q tests/m5_observability/edge/test_f8_m4_hook.py
 
 
 ---
 
+_**Agent (model gpt-5.1-codex-max, mode Agent)**_
 
+<tool-use data-tool-type="generic" data-tool-name="list_dir">
+<details>
+            <summary>Tool use: **list_dir** • Listed directory, 0 results</summary>
+        
+No results found
+</details>
+</tool-use>
 
 ---
 
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: edge/m5_observability/checks/__init__.py</summary>
 
+</details>
+</tool-use>
 
 ---
 
-
+<tool-use data-tool-type="generic" data-tool-name="list_dir">
+<details>
+            <summary>Tool use: **list_dir** • Listed directory, 0 results</summary>
+        
+No results found
+</details>
+</tool-use>
 
 ---
 
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
 
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "edge/m5_observability/checks/smoke_tests.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "80db9632-d520-4a59-90a4-f56d45a02b65",
+  "codeblock": {
+    "uri": {
+      "scheme": "file",
+      "authority": "",
+      "path": "/a:/Module-5/Module-5/edge/m5_observability/checks/smoke_tests.py",
+      "query": "",
+      "fragment": "",
+      "_formatted": "file:///a%3A/Module-5/Module-5/edge/m5_observability/checks/smoke_tests.py",
+      "_fsPath": "a:\\Module-5\\Module-5\\edge\\m5_observability\\checks\\smoke_tests.py"
+    },
+    "codeblockId": "80db9632-d520-4a59-90a4-f56d45a02b65",
+    "codeBlockIdx": 0,
+    "content": "\"\"\"\nStubbed M5 smoke tests runner for CI hook.\nDeterministic and side-effect free.\n\"\"\"\n\n\ndef run_m5_smoke_tests(policy_snapshot_id: str) -&gt; dict:\n    \"\"\"\n    Run (stub) smoke tests and return a receipt-like dict.\n    \"\"\"\n    return {\n        \"module\": \"M5_observability_v1\",\n        \"gate_id\": \"observability_v1\",\n        \"decision\": {\"outcome\": \"pass\", \"rationale\": \"OBS: SMOKE_TESTS_PASS\"},\n        \"actor\": {\"type\": \"agent\", \"id\": \"m4\", \"client\": \"ci\"},\n        \"inputs\": {\"checks\": [\"smoke_stub\"], \"telemetry_coverage_pct\": 0.0, \"signals_missing\": []},\n        \"execution_mode\": \"normal\",\n        \"policy_snapshot_id\": policy_snapshot_id,\n        \"timestamps\": {\"hw_monotonic_ms\": 1},\n        \"signature\": {\"algo\": \"stub-sha256\", \"value\": \"x\"},\n    }\n\n",
+    "languageId": "python"
+  }
+}
+```
+Result:
+
+```json
+{
+  "diff": {
+    "chunks": [
+      {
+        "diffString": "- \n+ \"\"\"\n+ Stubbed M5 smoke tests runner for CI hook.\n+ Deterministic and side-effect free.\n+ \"\"\"\n+ \n+ \n+ def run_m5_smoke_tests(policy_snapshot_id: str) -&gt; dict:\n+     \"\"\"\n+     Run (stub) smoke tests and return a receipt-like dict.\n+     \"\"\"\n+     return {\n+         \"module\": \"M5_observability_v1\",\n+         \"gate_id\": \"observability_v1\",\n+         \"decision\": {\"outcome\": \"pass\", \"rationale\": \"OBS: SMOKE_TESTS_PASS\"},\n+         \"actor\": {\"type\": \"agent\", \"id\": \"m4\", \"client\": \"ci\"},\n+         \"inputs\": {\"checks\": [\"smoke_stub\"], \"telemetry_coverage_pct\": 0.0, \"signals_missing\": []},\n+         \"execution_mode\": \"normal\",\n+         \"policy_snapshot_id\": policy_snapshot_id,\n+         \"timestamps\": {\"hw_monotonic_ms\": 1},\n+         \"signature\": {\"algo\": \"stub-sha256\", \"value\": \"x\"},\n+     }\n+ \n+ ",
+        "oldStart": 1,
+        "newStart": 1,
+        "oldLines": 1,
+        "newLines": 23,
+        "linesRemoved": 1,
+        "linesAdded": 23
+      }
+    ],
+    "editor": "EDITOR_AI"
+  },
+  "shouldAutoFixLints": true,
+  "resultForModel": "Success. Updated the following files:\nM edge/m5_observability/checks/smoke_tests.py",
+  "contentsAfterEdit": "\"\"\"\r\nStubbed M5 smoke tests runner for CI hook.\r\nDeterministic and side-effect free.\r\n\"\"\"\r\n\r\n\r\ndef run_m5_smoke_tests(policy_snapshot_id: str) -&gt; dict:\r\n    \"\"\"\r\n    Run (stub) smoke tests and return a receipt-like dict.\r\n    \"\"\"\r\n    return {\r\n        \"module\": \"M5_observability_v1\",\r\n        \"gate_id\": \"observability_v1\",\r\n        \"decision\": {\"outcome\": \"pass\", \"rationale\": \"OBS: SMOKE_TESTS_PASS\"},\r\n        \"actor\": {\"type\": \"agent\", \"id\": \"m4\", \"client\": \"ci\"},\r\n        \"inputs\": {\"checks\": [\"smoke_stub\"], \"telemetry_coverage_pct\": 0.0, \"signals_missing\": []},\r\n        \"execution_mode\": \"normal\",\r\n        \"policy_snapshot_id\": policy_snapshot_id,\r\n        \"timestamps\": {\"hw_monotonic_ms\": 1},\r\n        \"signature\": {\"algo\": \"stub-sha256\", \"value\": \"x\"},\r\n    }\r\n\r\n\r\n"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "edge/m5_observability/integrations/m4_hook.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "d0b29e33-733c-49a1-9651-7698da43f65c",
+  "codeblock": {
+    "uri": {
+      "scheme": "file",
+      "authority": "",
+      "path": "/a:/Module-5/Module-5/edge/m5_observability/integrations/m4_hook.py",
+      "query": "",
+      "fragment": "",
+      "_formatted": "file:///a%3A/Module-5/Module-5/edge/m5_observability/integrations/m4_hook.py",
+      "_fsPath": "a:\\Module-5\\Module-5\\edge\\m5_observability\\integrations\\m4_hook.py"
+    },
+    "codeblockId": "d0b29e33-733c-49a1-9651-7698da43f65c",
+    "codeBlockIdx": 0,
+    "content": "\"\"\"\nM4 hook to trigger M5 smoke tests and surface receipt linkage.\n\"\"\"\n\nfrom edge.m5_observability.checks.smoke_tests import run_m5_smoke_tests\n\n\ndef handle_m4_smoke_trigger(trigger: dict) -&gt; dict:\n    if not isinstance(trigger, dict):\n        raise ValueError(\"trigger must be a dict\")\n    policy_snapshot_id = trigger.get(\"policy_snapshot_id\")\n    if not isinstance(policy_snapshot_id, str) or not policy_snapshot_id.strip():\n        raise ValueError(\"policy_snapshot_id is required\")\n\n    return run_m5_smoke_tests(policy_snapshot_id)\n\n",
+    "languageId": "python"
+  }
+}
+```
+Result:
+
+```json
+{
+  "diff": {
+    "chunks": [
+      {
+        "diffString": "- \n+ \"\"\"\n+ M4 hook to trigger M5 smoke tests and surface receipt linkage.\n+ \"\"\"\n+ \n+ from edge.m5_observability.checks.smoke_tests import run_m5_smoke_tests\n+ \n+ \n+ def handle_m4_smoke_trigger(trigger: dict) -&gt; dict:\n+     if not isinstance(trigger, dict):\n+         raise ValueError(\"trigger must be a dict\")\n+     policy_snapshot_id = trigger.get(\"policy_snapshot_id\")\n+     if not isinstance(policy_snapshot_id, str) or not policy_snapshot_id.strip():\n+         raise ValueError(\"policy_snapshot_id is required\")\n+ \n+     return run_m5_smoke_tests(policy_snapshot_id)\n+ \n+ ",
+        "oldStart": 1,
+        "newStart": 1,
+        "oldLines": 1,
+        "newLines": 17,
+        "linesRemoved": 1,
+        "linesAdded": 17
+      }
+    ],
+    "editor": "EDITOR_AI"
+  },
+  "shouldAutoFixLints": true,
+  "resultForModel": "Success. Updated the following files:\nM edge/m5_observability/integrations/m4_hook.py",
+  "contentsAfterEdit": "\"\"\"\r\nM4 hook to trigger M5 smoke tests and surface receipt linkage.\r\n\"\"\"\r\n\r\nfrom edge.m5_observability.checks.smoke_tests import run_m5_smoke_tests\r\n\r\n\r\ndef handle_m4_smoke_trigger(trigger: dict) -&gt; dict:\r\n    if not isinstance(trigger, dict):\r\n        raise ValueError(\"trigger must be a dict\")\r\n    policy_snapshot_id = trigger.get(\"policy_snapshot_id\")\r\n    if not isinstance(policy_snapshot_id, str) or not policy_snapshot_id.strip():\r\n        raise ValueError(\"policy_snapshot_id is required\")\r\n\r\n    return run_m5_smoke_tests(policy_snapshot_id)\r\n\r\n\r\n"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "tests/m5_observability/edge/test_f8_m4_hook.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "334df158-7e88-4a9b-96c2-bbae547bfd5b",
+  "codeblock": {
+    "uri": {
+      "scheme": "file",
+      "authority": "",
+      "path": "/a:/Module-5/Module-5/tests/m5_observability/edge/test_f8_m4_hook.py",
+      "query": "",
+      "fragment": "",
+      "_formatted": "file:///a%3A/Module-5/Module-5/tests/m5_observability/edge/test_f8_m4_hook.py",
+      "_fsPath": "a:\\Module-5\\Module-5\\tests\\m5_observability\\edge\\test_f8_m4_hook.py"
+    },
+    "codeblockId": "334df158-7e88-4a9b-96c2-bbae547bfd5b",
+    "codeBlockIdx": 0,
+    "content": "import pytest\n\nfrom edge.m5_observability.integrations.m4_hook import handle_m4_smoke_trigger\nfrom edge.m5_observability.checks import smoke_tests\n\n\ndef test_handle_trigger_runs_smoke_and_links_snapshot(monkeypatch):\n    calls = {\"count\": 0}\n\n    def fake_run(snapshot_id: str):\n        calls[\"count\"] += 1\n        return {\n            \"module\": \"M5_observability_v1\",\n            \"gate_id\": \"observability_v1\",\n            \"decision\": {\"outcome\": \"pass\", \"rationale\": \"OBS: SMOKE_TESTS_PASS\"},\n            \"actor\": {\"type\": \"agent\", \"id\": \"m4\", \"client\": \"ci\"},\n            \"inputs\": {\"checks\": [\"smoke_stub\"], \"telemetry_coverage_pct\": 0.0, \"signals_missing\": []},\n            \"execution_mode\": \"normal\",\n            \"policy_snapshot_id\": snapshot_id,\n            \"timestamps\": {\"hw_monotonic_ms\": 1},\n            \"signature\": {\"algo\": \"stub-sha256\", \"value\": \"x\"},\n        }\n\n    monkeypatch.setattr(smoke_tests, \"run_m5_smoke_tests\", fake_run)\n\n    trigger = {\"policy_snapshot_id\": \"PB-123\"}\n    result = handle_m4_smoke_trigger(trigger)\n\n    assert calls[\"count\"] == 1\n    assert result[\"policy_snapshot_id\"] == \"PB-123\"\n    assert result[\"inputs\"][\"checks\"] == [\"smoke_stub\"]\n\n    # Linkage check with a dummy M4 receipt using same snapshot id\n    m4_receipt = {\"policy_snapshot_id\": \"PB-123\"}\n    assert m4_receipt[\"policy_snapshot_id\"] == result[\"policy_snapshot_id\"]\n\n\ndef test_missing_snapshot_id_raises():\n    with pytest.raises(ValueError):\n        handle_m4_smoke_trigger({})\n\n    with pytest.raises(ValueError):\n        handle_m4_smoke_trigger({\"policy_snapshot_id\": \"\"})\n\n",
+    "languageId": "python"
+  }
+}
+```
+Result:
+
+```json
+{
+  "diff": {
+    "chunks": [
+      {
+        "diffString": "- \n+ import pytest\n+ \n+ from edge.m5_observability.integrations.m4_hook import handle_m4_smoke_trigger\n+ from edge.m5_observability.checks import smoke_tests\n+ \n+ \n+ def test_handle_trigger_runs_smoke_and_links_snapshot(monkeypatch):\n+     calls = {\"count\": 0}\n+ \n+     def fake_run(snapshot_id: str):\n+         calls[\"count\"] += 1\n+         return {\n+             \"module\": \"M5_observability_v1\",\n+             \"gate_id\": \"observability_v1\",\n+             \"decision\": {\"outcome\": \"pass\", \"rationale\": \"OBS: SMOKE_TESTS_PASS\"},\n+             \"actor\": {\"type\": \"agent\", \"id\": \"m4\", \"client\": \"ci\"},\n+             \"inputs\": {\"checks\": [\"smoke_stub\"], \"telemetry_coverage_pct\": 0.0, \"signals_missing\": []},\n+             \"execution_mode\": \"normal\",\n+             \"policy_snapshot_id\": snapshot_id,\n+             \"timestamps\": {\"hw_monotonic_ms\": 1},\n+             \"signature\": {\"algo\": \"stub-sha256\", \"value\": \"x\"},\n+         }\n+ \n+     monkeypatch.setattr(smoke_tests, \"run_m5_smoke_tests\", fake_run)\n+ \n+     trigger = {\"policy_snapshot_id\": \"PB-123\"}\n+     result = handle_m4_smoke_trigger(trigger)\n+ \n+     assert calls[\"count\"] == 1\n+     assert result[\"policy_snapshot_id\"] == \"PB-123\"\n+     assert result[\"inputs\"][\"checks\"] == [\"smoke_stub\"]\n+ \n+     # Linkage check with a dummy M4 receipt using same snapshot id\n+     m4_receipt = {\"policy_snapshot_id\": \"PB-123\"}\n+     assert m4_receipt[\"policy_snapshot_id\"] == result[\"policy_snapshot_id\"]\n+ \n+ \n+ def test_missing_snapshot_id_raises():\n+     with pytest.raises(ValueError):\n+         handle_m4_smoke_trigger({})\n+ \n+     with pytest.raises(ValueError):\n+         handle_m4_smoke_trigger({\"policy_snapshot_id\": \"\"})\n+ \n+ ",
+        "oldStart": 1,
+        "newStart": 1,
+        "oldLines": 1,
+        "newLines": 45,
+        "linesRemoved": 1,
+        "linesAdded": 45
+      }
+    ],
+    "editor": "EDITOR_AI"
+  },
+  "shouldAutoFixLints": true,
+  "resultForModel": "Success. Updated the following files:\nM tests/m5_observability/edge/test_f8_m4_hook.py",
+  "contentsAfterEdit": "import pytest\r\n\r\nfrom edge.m5_observability.integrations.m4_hook import handle_m4_smoke_trigger\r\nfrom edge.m5_observability.checks import smoke_tests\r\n\r\n\r\ndef test_handle_trigger_runs_smoke_and_links_snapshot(monkeypatch):\r\n    calls = {\"count\": 0}\r\n\r\n    def fake_run(snapshot_id: str):\r\n        calls[\"count\"] += 1\r\n        return {\r\n            \"module\": \"M5_observability_v1\",\r\n            \"gate_id\": \"observability_v1\",\r\n            \"decision\": {\"outcome\": \"pass\", \"rationale\": \"OBS: SMOKE_TESTS_PASS\"},\r\n            \"actor\": {\"type\": \"agent\", \"id\": \"m4\", \"client\": \"ci\"},\r\n            \"inputs\": {\"checks\": [\"smoke_stub\"], \"telemetry_coverage_pct\": 0.0, \"signals_missing\": []},\r\n            \"execution_mode\": \"normal\",\r\n            \"policy_snapshot_id\": snapshot_id,\r\n            \"timestamps\": {\"hw_monotonic_ms\": 1},\r\n            \"signature\": {\"algo\": \"stub-sha256\", \"value\": \"x\"},\r\n        }\r\n\r\n    monkeypatch.setattr(smoke_tests, \"run_m5_smoke_tests\", fake_run)\r\n\r\n    trigger = {\"policy_snapshot_id\": \"PB-123\"}\r\n    result = handle_m4_smoke_trigger(trigger)\r\n\r\n    assert calls[\"count\"] == 1\r\n    assert result[\"policy_snapshot_id\"] == \"PB-123\"\r\n    assert result[\"inputs\"][\"checks\"] == [\"smoke_stub\"]\r\n\r\n    # Linkage check with a dummy M4 receipt using same snapshot id\r\n    m4_receipt = {\"policy_snapshot_id\": \"PB-123\"}\r\n    assert m4_receipt[\"policy_snapshot_id\"] == result[\"policy_snapshot_id\"]\r\n\r\n\r\ndef test_missing_snapshot_id_raises():\r\n    with pytest.raises(ValueError):\r\n        handle_m4_smoke_trigger({})\r\n\r\n    with pytest.raises(ValueError):\r\n        handle_m4_smoke_trigger({\"policy_snapshot_id\": \"\"})\r\n\r\n\r\n"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
+<details><summary>Tool use: **run_terminal_cmd** • Run command: cd A:\Module-5\Module-5; python -m pytest -q tests/m5_observability/edge/test_f8_m4_hook.py</summary>
+
+```bash
+cd A:\Module-5\Module-5; python -m pytest -q tests/m5_observability/edge/test_f8_m4_hook.py
+```
+
+```
+F.                                                                       [100%]
+================================== FAILURES ===================================
+______________ test_handle_trigger_runs_smoke_and_links_snapshot ______________
+
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002C2080428B0&gt;
+
+    def test_handle_trigger_runs_smoke_and_links_snapshot(monkeypatch):
+        calls = {"count": 0}
+    
+        def fake_run(snapshot_id: str):
+            calls["count"] += 1
+            return {
+                "module": "M5_observability_v1",
+                "gate_id": "observability_v1",
+                "decision": {"outcome": "pass", "rationale": "OBS: SMOKE_TESTS_PASS"},
+                "actor": {"type": "agent", "id": "m4", "client": "ci"},
+                "inputs": {"checks": ["smoke_stub"], "telemetry_coverage_pct": 0.0, "signals_missing": []},
+                "execution_mode": "normal",
+                "policy_snapshot_id": snapshot_id,
+                "timestamps": {"hw_monotonic_ms": 1},
+                "signature": {"algo": "stub-sha256", "value": "x"},
+            }
+    
+        monkeypatch.setattr(smoke_tests, "run_m5_smoke_tests", fake_run)
+    
+        trigger = {"policy_snapshot_id": "PB-123"}
+        result = handle_m4_smoke_trigger(trigger)
+    
+&gt;       assert calls["count"] == 1
+E       assert 0 == 1
+
+tests\m5_observability\edge\test_f8_m4_hook.py:29: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/m5_observability/edge/test_f8_m4_hook.py::test_handle_trigger_runs_smoke_and_links_snapshot
+1 failed, 1 passed in 0.17s
+
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Adjusting import for monkeypatch compatibility**
+
+The test integration imports the function directly, bypassing the monkeypatch, so I'll change it to import the module and call the function through it to enable monkeypatching.</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "edge/m5_observability/integrations/m4_hook.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "a60abfdb-9c4e-4750-9aa3-23bc27127cd2",
+  "codeblock": {
+    "uri": {
+      "scheme": "file",
+      "authority": "",
+      "path": "/a:/Module-5/Module-5/edge/m5_observability/integrations/m4_hook.py",
+      "query": "",
+      "fragment": "",
+      "_formatted": "file:///a%3A/Module-5/Module-5/edge/m5_observability/integrations/m4_hook.py",
+      "_fsPath": "a:\\Module-5\\Module-5\\edge\\m5_observability\\integrations\\m4_hook.py"
+    },
+    "codeblockId": "a60abfdb-9c4e-4750-9aa3-23bc27127cd2",
+    "codeBlockIdx": 0,
+    "content": "\"\"\"\r\nM4 hook to trigger M5 smoke tests and surface receipt linkage.\r\n\"\"\"\r\n\r\nfrom edge.m5_observability.checks import smoke_tests\r\n\r\n\r\ndef handle_m4_smoke_trigger(trigger: dict) -&gt; dict:\r\n    if not isinstance(trigger, dict):\r\n        raise ValueError(\"trigger must be a dict\")\r\n    policy_snapshot_id = trigger.get(\"policy_snapshot_id\")\r\n    if not isinstance(policy_snapshot_id, str) or not policy_snapshot_id.strip():\r\n        raise ValueError(\"policy_snapshot_id is required\")\r\n\r\n    return smoke_tests.run_m5_smoke_tests(policy_snapshot_id)\r\n\r\n\r\n",
+    "languageId": "python"
+  }
+}
+```
+Result:
+
+```json
+{
+  "diff": {
+    "chunks": [
+      {
+        "diffString": "  \"\"\"\r\n  \r\n- from edge.m5_observability.checks.smoke_tests import run_m5_smoke_tests\r\n+ from edge.m5_observability.checks import smoke_tests\r\n  \r\n  \r",
+        "oldStart": 3,
+        "newStart": 3,
+        "oldLines": 5,
+        "newLines": 5,
+        "linesRemoved": 1,
+        "linesAdded": 1
+      },
+      {
+        "diffString": "          raise ValueError(\"policy_snapshot_id is required\")\r\n  \r\n-     return run_m5_smoke_tests(policy_snapshot_id)\r\n+     return smoke_tests.run_m5_smoke_tests(policy_snapshot_id)\r\n  \r\n  \r",
+        "oldStart": 13,
+        "newStart": 13,
+        "oldLines": 5,
+        "newLines": 5,
+        "linesRemoved": 1,
+        "linesAdded": 1
+      }
+    ],
+    "editor": "EDITOR_AI"
+  },
+  "shouldAutoFixLints": true,
+  "resultForModel": "Success. Updated the following files:\nM edge/m5_observability/integrations/m4_hook.py",
+  "contentsAfterEdit": "\"\"\"\r\nM4 hook to trigger M5 smoke tests and surface receipt linkage.\r\n\"\"\"\r\n\r\nfrom edge.m5_observability.checks import smoke_tests\r\n\r\n\r\ndef handle_m4_smoke_trigger(trigger: dict) -&gt; dict:\r\n    if not isinstance(trigger, dict):\r\n        raise ValueError(\"trigger must be a dict\")\r\n    policy_snapshot_id = trigger.get(\"policy_snapshot_id\")\r\n    if not isinstance(policy_snapshot_id, str) or not policy_snapshot_id.strip():\r\n        raise ValueError(\"policy_snapshot_id is required\")\r\n\r\n    return smoke_tests.run_m5_smoke_tests(policy_snapshot_id)\r\n\r\n\r\n"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
+<details><summary>Tool use: **run_terminal_cmd** • Run command: cd A:\Module-5\Module-5; python -m pytest -q tests/m5_observability/edge/test_f8_m4_hook.py</summary>
+
+```bash
+cd A:\Module-5\Module-5; python -m pytest -q tests/m5_observability/edge/test_f8_m4_hook.py
+```
+
+```
+..                                                                       [100%]
+2 passed in 0.05s
+
+```
+</details>
+</tool-use>
+
+---
+
+Implemented M4 smoke-test hook and trigger handling:
+
+- `edge/m5_observability/checks/smoke_tests.py`: added deterministic `run_m5_smoke_tests` returning a fixed receipt-like dict with policy snapshot linkage.
+- `edge/m5_observability/integrations/m4_hook.py`: added `handle_m4_smoke_trigger`, validating trigger and invoking the smoke tests (imported via module for monkeypatching).
+- `tests/m5_observability/edge/test_f8_m4_hook.py`: verifies snapshot ID linkage, smoke checks presence, call count via monkeypatch, and validation error on missing snapshot ID.
+
+Tests: `python -m pytest -q tests/m5_observability/edge/test_f8_m4_hook.py` → **2 passed**.
 
 ---
 

@@ -4136,3 +4136,475 @@ python -m pytest --cov=edge/m5_observability --cov-report=term-missing
 
 ---
 
+_**User (2025-12-26 10:43Z)**_
+
+run the test case
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+
+---
+
+
+Running all test cases:
+
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
+<details><summary>Tool use: **run_terminal_cmd** • Run command: cd C:\Users\user\Desktop\module_05\Module-5; python -m pytest tests/m5_observability/edge/ -v</summary>
+
+```bash
+cd C:\Users\user\Desktop\module_05\Module-5; python -m pytest tests/m5_observability/edge/ -v
+```
+
+```
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.0.2, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\user\Desktop\module_05\Module-5
+collecting ... collected 24 items
+
+tests/m5_observability/edge/test_f1_cardinality.py::test_dynamic_key PASSED [  4%]
+tests/m5_observability/edge/test_f1_cardinality.py::test_high_card_value PASSED [  8%]
+tests/m5_observability/edge/test_f1_cardinality.py::test_safe_case PASSED [ 12%]
+tests/m5_observability/edge/test_f1_cardinality.py::test_determinism PASSED [ 16%]
+tests/m5_observability/edge/test_f1_coverage.py::test_compute_coverage_basic PASSED [ 20%]
+tests/m5_observability/edge/test_f1_coverage.py::test_compute_coverage_empty_required PASSED [ 25%]
+tests/m5_observability/edge/test_f1_coverage.py::test_compute_coverage_duplicates PASSED [ 29%]
+tests/m5_observability/edge/test_f1_coverage.py::test_aggregate_coverage_min PASSED [ 33%]
+tests/m5_observability/edge/test_f1_coverage.py::test_aggregate_coverage_empty PASSED [ 37%]
+tests/m5_observability/edge/test_f1_pii.py::test_pii_detection PASSED    [ 41%]
+tests/m5_observability/edge/test_f1_pii.py::test_determinism PASSED      [ 45%]
+tests/m5_observability/edge/test_f1_required_signals.py::test_all_signals_present PASSED [ 50%]
+tests/m5_observability/edge/test_f1_required_signals.py::test_some_signals_missing PASSED [ 54%]
+tests/m5_observability/edge/test_f1_required_signals.py::test_empty_required_signals PASSED [ 58%]
+tests/m5_observability/edge/test_f1_required_signals.py::test_duplicate_required_signals PASSED [ 62%]
+tests/m5_observability/edge/test_f1_surfaces.py::test_endpoints_discovery PASSED [ 66%]
+tests/m5_observability/edge/test_f1_surfaces.py::test_handlers_discovery PASSED [ 70%]
+tests/m5_observability/edge/test_f1_surfaces.py::test_jobs_discovery PASSED [ 75%]
+tests/m5_observability/edge/test_f1_surfaces.py::test_determinism PASSED [ 79%]
+tests/m5_observability/edge/test_f1_surfaces.py::test_negative PASSED    [ 83%]
+tests/m5_observability/edge/test_f4_coverage_model_contract.py::test_schema PASSED [ 87%]
+tests/m5_observability/edge/test_f4_coverage_model_contract.py::test_ordering PASSED [ 91%]
+tests/m5_observability/edge/test_f4_coverage_model_contract.py::test_rounding_delta PASSED [ 95%]
+tests/m5_observability/edge/test_f4_delta_reporter_integration.py::test_delta_reporter_integration PASSED [100%]
+
+============================= 24 passed in 0.27s ==============================
+
+```
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+**All tests passed**
+
+**Results:**
+- 24 tests passed in 0.27s
+- 0 failures
+
+**Test breakdown:**
+- F1 (Foundation): 20 tests
+  - Cardinality: 4
+  - Coverage: 5
+  - PII: 2
+  - Required Signals: 4
+  - Surfaces: 5
+- F4 (Feature 4): 4 tests
+  - Coverage Model Contract (MT1): 3
+  - Delta Reporter Integration (MT5): 1
+
+All test cases are passing.
+
+---
+
+_**User (2025-12-26 10:43Z)**_
+
+M5.F8.MT3 — M3 Compatibility via Snippet Marker (Golden)]
+Strict, careful processing demanded: no hallucination, no assumptions, no sycophancy, no fiction. Do what is asked. 100% Accurate. Minimal tokens.
+
+Implement MT3 only (Python + pytest). Do NOT implement MT1/MT2/MT4/MT5.
+
+Touch ONLY:
+- edge/m5_observability/snippets/marker.py
+- tests/m5_observability/edge/test_f8_snippet_marker.py
+(+ _init_.py only if needed)
+
+Implement:
+def ensure_snippet_marker(snippet: str, marker: str, comment_prefix: str = "//") -> str
+
+Rules:
+- If marker already exists in snippet => return snippet unchanged.
+- Else prepend exactly: f"{comment_prefix} {marker}\n" + snippet
+- deterministic.
+
+Tests:
+- Without marker => startswith "// CC_OBS_SNIPPET\n"
+- With marker => unchanged (exact equality)
+Run:
+pytest -q tests/m5_observability/edge/test_f8_snippet_marker.py
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+
+---
+
+
+Implementing M5.F8.MT3: creating the marker module and tests.
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: Module-5/edge/m5_observability/snippets/marker.py</summary>
+
+**Chunk 1**
+Lines added: 19, lines removed: 1
+
+```diff
+@@ -1,1 +1,19 @@
+- 
++ """M5.F8.MT3: Snippet Marker - ensure compatibility marker exists."""
++ 
++ 
++ def ensure_snippet_marker(snippet: str, marker: str, comment_prefix: str = "//") -&gt; str:
++     """Ensure snippet has marker; add if missing.
++     
++     Args:
++         snippet: The code snippet
++         marker: Marker string to check/add
++         comment_prefix: Comment prefix (default "//")
++     
++     Returns:
++         Snippet with marker prepended if missing, unchanged otherwise
++     """
++     if marker in snippet:
++         return snippet
++     
++     return f"{comment_prefix} {marker}\n" + snippet
++ 
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="write">
+
+<details><summary>Tool use: **write** • Edit file: Module-5/tests/m5_observability/edge/test_f8_snippet_marker.py</summary>
+
+**Chunk 1**
+Lines added: 48, lines removed: 1
+
+```diff
+@@ -1,1 +1,48 @@
+- 
++ """Tests for M5.F8.MT3 Snippet Marker."""
++ 
++ import pytest
++ from edge.m5_observability.snippets.marker import ensure_snippet_marker
++ 
++ 
++ def test_without_marker_prepends_marker():
++     """Test that snippet without marker gets marker prepended."""
++     snippet = "console.log('test');"
++     marker = "CC_OBS_SNIPPET"
++     
++     result = ensure_snippet_marker(snippet, marker)
++     
++     assert result.startswith("// CC_OBS_SNIPPET\n"), f"Result should start with '// CC_OBS_SNIPPET\\n', got: {result[:30]}"
++     assert snippet in result, "Original snippet should be in result"
++     assert result == f"// CC_OBS_SNIPPET\n{snippet}", "Result should be marker + snippet"
++ 
++ 
++ def test_with_marker_unchanged():
++     """Test that snippet with marker remains unchanged."""
++     marker = "CC_OBS_SNIPPET"
++     snippet_with_marker = f"// {marker}\nconsole.log('test');"
++     
++     result = ensure_snippet_marker(snippet_with_marker, marker)
++     
++     assert result == snippet_with_marker, "Snippet with marker should be unchanged"
++ 
++ 
++ def test_marker_in_middle_unchanged():
++     """Test that marker anywhere in snippet keeps it unchanged."""
++     marker = "CC_OBS_SNIPPET"
++     snippet = f"console.log('test');\n// {marker}\nmore code();"
++     
++     result = ensure_snippet_marker(snippet, marker)
++     
++     assert result == snippet, "Snippet with marker anywhere should be unchanged"
++ 
++ 
++ def test_custom_comment_prefix():
++     """Test that custom comment prefix works."""
++     snippet = "console.log('test');"
++     marker = "CC_OBS_SNIPPET"
++     
++     result = ensure_snippet_marker(snippet, marker, comment_prefix="#")
++     
++     assert result.startswith("# CC_OBS_SNIPPET\n"), "Should use custom comment prefix"
++     assert result == f"# CC_OBS_SNIPPET\n{snippet}"
++ 
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 2 files</summary>
+      
+Lint paths:
+
+- `Module-5/edge/m5_observability/snippets`
+- `Module-5/tests/m5_observability/edge/test_f8_snippet_marker.py`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+Running the tests:
+
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
+<details><summary>Tool use: **run_terminal_cmd** • Run command: cd C:\Users\user\Desktop\module_05\Module-5; python -m pytest -q tests/m5_observability/edge/test_f8_snippet_marker.py</summary>
+
+```bash
+cd C:\Users\user\Desktop\module_05\Module-5; python -m pytest -q tests/m5_observability/edge/test_f8_snippet_marker.py
+```
+
+```
+....                                                                     [100%]
+4 passed in 0.06s
+
+```
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+**All tests passed: 4 passed in 0.06s**
+
+**Implementation complete:**
+
+**Created files:**
+1. `edge/m5_observability/snippets/marker.py` - `ensure_snippet_marker()` function
+2. `tests/m5_observability/edge/test_f8_snippet_marker.py` - 4 test cases
+
+**Implementation details:**
+- If marker exists in snippet → return unchanged
+- If marker missing → prepend `f"{comment_prefix} {marker}\n" + snippet`
+- Default `comment_prefix = "//"`
+- Deterministic behavior
+
+**Test coverage:**
+- Without marker → prepends "// CC_OBS_SNIPPET\n"
+- With marker → unchanged (exact equality)
+- Marker anywhere in snippet → unchanged
+- Custom comment prefix works
+
+M5.F8.MT3 is implemented and tested.
+
+---
+
+_**User (2025-12-26 10:43Z)**_
+
+2 critical validation checks (must be true)
+
+To be fully correct, confirm these are true in your code/tests:
+
+Marker constant matches policy / module text exactly
+
+Should be exactly: CC_OBS_SNIPPET (case-sensitive) ✅
+If you used any variant (e.g., CC_OBS_SNIPPETS), that would be wrong.
+
+“Marker anywhere” check should be exact-string match, not fuzzy
+
+Your rule “marker anywhere → unchanged” is correct only if it checks exact substring CC_OBS_SNIPPET.
+Avoid loose matches like OBS_SNIP that could create false positives.
+
+Minor improvement (optional, not required)
+
+When marker is missing, prepending is fine. Some teams prefer inserting after shebang or existing header comments, but MT3 doesn’t require that.
+
+Conclusion: Your MT3 implementation is valid and meets the described behaviour and test coverage.
+fix the issues
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+
+---
+
+
+Verifying the two critical checks:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: Module-5/edge/m5_observability/snippets/marker.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: Module-5/tests/m5_observability/edge/test_f8_snippet_marker.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+Verifying both checks and adding a test to ensure partial matches don't cause false positives:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: Module-5/edge/m5_observability/snippets/marker.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: Module-5/tests/m5_observability/edge/test_f8_snippet_marker.py</summary>
+
+**Chunk 1**
+Lines added: 21, lines removed: 1
+
+```diff
+@@ -46,4 +47,24 @@
+      assert result == f"# CC_OBS_SNIPPET\n{snippet}"
+  
+- 
++ 
++ def test_partial_match_not_recognized():
++     """Test that partial matches (e.g., OBS_SNIP) don't prevent marker addition."""
++     marker = "CC_OBS_SNIPPET"
++     snippet = "console.log('OBS_SNIP');\ncode();"
++     
++     result = ensure_snippet_marker(snippet, marker)
++     
++     assert result.startswith("// CC_OBS_SNIPPET\n"), "Partial match should not prevent marker addition"
++     assert snippet in result, "Original snippet should be in result"
++ 
++ 
++ def test_case_sensitive_marker():
++     """Test that marker matching is case-sensitive."""
++     marker = "CC_OBS_SNIPPET"
++     snippet = "console.log('cc_obs_snippet');\ncode();"
++     
++     result = ensure_snippet_marker(snippet, marker)
++     
++     assert result.startswith("// CC_OBS_SNIPPET\n"), "Case-insensitive match should not prevent marker addition"
++ 
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
+<details><summary>Tool use: **run_terminal_cmd** • Run command: cd C:\Users\user\Desktop\module_05\Module-5; python -m pytest -q tests/m5_observability/edge/test_f8_snippet_marker.py -v</summary>
+
+```bash
+cd C:\Users\user\Desktop\module_05\Module-5; python -m pytest -q tests/m5_observability/edge/test_f8_snippet_marker.py -v
+```
+
+```
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\Users\user\Desktop\module_05\Module-5
+collected 6 items
+
+tests\m5_observability\edge\test_f8_snippet_marker.py ......             [100%]
+
+============================== 6 passed in 0.07s ==============================
+
+```
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+**Verification complete: both checks pass**
+
+**Check 1: Marker constant is exactly `CC_OBS_SNIPPET` (case-sensitive)**
+- Tests use `marker = "CC_OBS_SNIPPET"` — correct
+- Implementation uses exact string matching — correct
+
+**Check 2: "Marker anywhere" uses exact substring match, not fuzzy**
+- Implementation uses `if marker in snippet:` — exact substring match
+- Added tests verify:
+  - Partial matches (e.g., "OBS_SNIP") don't prevent marker addition
+  - Case-sensitive matching (e.g., "cc_obs_snippet" ≠ "CC_OBS_SNIPPET")
+- All 6 tests pass
+
+**Conclusion:**
+- Uses exact substring matching (`marker in snippet`)
+- Only matches the exact string "CC_OBS_SNIPPET"
+- Partial matches don't create false positives
+- Case-sensitive matching is enforced
+
+Implementation is correct and meets both validation checks.
+
+---
+

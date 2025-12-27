@@ -27,3 +27,24 @@ export function trackMetrics(endpoint: string) {
   return tags;
 }
 
+
+// <CC_OBS_SNIPPET>
+// sample_rate=1
+// labels=[endpoint,method,status]
+// counter:<name>
+// histogram:<name>
+// timer:<name>
+// </CC_OBS_SNIPPET>
+
+// <CC_OBS_SNIPPET>
+function getCorrelationIds(input: any): { request_id: string; trace_id: string } {
+    // Extract correlation IDs from request headers or generate new ones
+    const request_id = input?.headers?.['x-request-id'] || input?.request_id || generateId();
+    const trace_id = input?.headers?.['x-trace-id'] || input?.trace_id || generateId();
+    return { request_id, trace_id };
+}
+
+function generateId(): string {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+// </CC_OBS_SNIPPET>

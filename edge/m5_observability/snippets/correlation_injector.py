@@ -48,7 +48,7 @@ def plan_correlation_inject(file_path: str, original_text: str, policy_cfg: dict
     start_line = f"// <{marker}>"
     end_line = f"// </{marker}>"
     
-    stub_content = 'function getCorrelationIds(input:any){ return { request_id:"<REQUEST_ID>", trace_id:"<TRACE_ID>" }; }'
+    stub_content = 'function getCorrelationIds(input: any): { request_id: string; trace_id: string } {\n    // Extract correlation IDs from request headers or generate new ones\n    const request_id = input?.headers?.[\'x-request-id\'] || input?.request_id || generateId();\n    const trace_id = input?.headers?.[\'x-trace-id\'] || input?.trace_id || generateId();\n    return { request_id, trace_id };\n}\n\nfunction generateId(): string {\n    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);\n}'
     
     insert_text = newline + start_line + newline + stub_content + newline + end_line + newline
     

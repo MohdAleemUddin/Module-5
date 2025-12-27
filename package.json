@@ -1,5 +1,7 @@
 {
   "name": "zeroui-m5",
+  "displayName": "ZeroUI M5",
+  "publisher": "zeroui",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.80.0"
@@ -18,28 +20,116 @@
   ],
   "scripts": {
     "test": "mocha -r ts-node/register --ui tdd \"src/**/*.test.ts\"",
-    "compile": "tsc -p ."
+    "compile": "tsc -p .",
+    "vscode:prepublish": "npm run compile"
   },
   "contributes": {
     "commands": [
       {
         "command": "zeroui.m5.openPanel",
-        "title": "Open M5 Panel"
+        "title": "Open M5 Decision Panel",
+        "icon": "$(beaker)"
+      },
+      {
+        "command": "zeroui.m5.runSmokeTests",
+        "title": "Run Observability Smoke Tests",
+        "icon": "$(play)"
+      },
+      {
+        "command": "zeroui.m5.insertObsSnippet",
+        "title": "Insert Observability Snippet",
+        "icon": "$(add)"
+      },
+      {
+        "command": "zeroui.m5.insertMetricsSnippet",
+        "title": "Insert Metrics Snippet",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "zeroui.m5.injectCorrelation",
+        "title": "Inject Correlation IDs",
+        "icon": "$(link)"
+      },
+      {
+        "command": "zeroui.m5.redactPii",
+        "title": "Redact PII/Secrets",
+        "icon": "$(shield)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "zeroui.m5.openPanel",
+          "when": "true"
+        },
+        {
+          "command": "zeroui.m5.runSmokeTests",
+          "when": "true"
+        },
+        {
+          "command": "zeroui.m5.insertObsSnippet",
+          "when": "editorTextFocus"
+        },
+        {
+          "command": "zeroui.m5.insertMetricsSnippet",
+          "when": "editorTextFocus"
+        },
+        {
+          "command": "zeroui.m5.injectCorrelation",
+          "when": "editorTextFocus"
+        },
+        {
+          "command": "zeroui.m5.redactPii",
+          "when": "editorTextFocus"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "zeroui.m5.insertObsSnippet",
+          "when": "editorTextFocus",
+          "group": "m5"
+        },
+        {
+          "command": "zeroui.m5.insertMetricsSnippet",
+          "when": "editorTextFocus",
+          "group": "m5"
+        },
+        {
+          "command": "zeroui.m5.injectCorrelation",
+          "when": "editorTextFocus",
+          "group": "m5"
+        },
+        {
+          "command": "zeroui.m5.redactPii",
+          "when": "editorTextFocus",
+          "group": "m5"
+        }
+      ]
+    },
+    "problemMatchers": [
+      {
+        "name": "m5-observability",
+        "owner": "m5",
+        "pattern": {
+          "regexp": "^CC-OB-(\\d+):\\s*(.*)$",
+          "code": 1,
+          "message": 2
+        }
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "zeroUI.container",
+          "id": "zeroui-container",
           "title": "ZeroUI",
           "icon": "$(beaker)"
         }
       ]
     },
     "views": {
-      "zeroUI.container": [
+      "zeroui-container": [
         {
-          "id": "zeroUI.view.main",
+          "id": "zeroui-view-main",
           "name": "Main"
         }
       ]

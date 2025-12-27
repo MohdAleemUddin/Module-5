@@ -2,6 +2,8 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { spawn } from 'child_process';
 import * as vscode from 'vscode';
+import { pc1Check } from '../pc1/pc1Wrapper';
+import { loadPolicy } from '../policy/policyLoader';
 
 type PlanItem = {
   rule_id: string;
@@ -10,15 +12,61 @@ type PlanItem = {
   replacement: string;
 };
 
-const TEST_RULES = [
-  { rule_id: 'PII-001', pattern: 'Authorization:\\s*Bearer\\s+\\S+' },
-  { rule_id: 'PII-002', pattern: 'email=\\S+' },
-  { rule_id: 'PII-003', pattern: 'token=\\S+' }
-]; // TODO replace with policy-driven rules later
+async function loadPiiRulesFromPolicy(workspaceRoot: string): Promise<any[]> {
+  const policy = await loadPolicy(workspaceRoot);
+  return policy['obs.pii_rules'] || [];
+}
 
-async function runRedactionCli(payload: object): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const proc = spawn('python', ['-m', 'edge.m5_observability.tools.pii_redact_cli']);
+async function findProjectRootForPII(workspaceRoot: string): Promise<string> {
+  const fs = await import('fs/promises');
+  const path = await import('path');
+  
+  // Check if 'edge' exists in workspace root
+  const edgePath = path.join(workspaceRoot, 'edge');
+  try {
+    await fs.access(edgePath);
+    return workspaceRoot;
+  } catch {
+    // Edge not in workspace root, try parent directory
+    const parentEdgePath = path.join(path.dirname(workspaceRoot), 'edge');
+    try {
+      await fs.access(parentEdgePath);
+      return path.dirname(workspaceRoot);
+    } catch {
+      // Fallback: assume edge is in parent of workspace
+      return path.dirname(workspaceRoot);
+    }
+  }
+}
+
+async function runRedactionCli(payload: object, workspaceRoot: string): Promise<string> {
+  return new Promise(async (resolve, reject) => {
+    const projectRoot = await findProjectRootForPII(workspaceRoot);
+    const projectRootEscaped = projectRoot.replace(/\\/g, '/').replace(/'/g, "\\'");
+    
+    // Use Python -c with explicit path and call the CLI function directly
+    // The CLI reads from stdin, so we pass payload via stdin
+    const proc = spawn('python', ['-c', `
+import sys
+import json
+sys.path.insert(0, r'${projectRootEscaped}')
+
+from edge.m5_observability.checks.pii_redaction import build_redaction_plan
+
+# Read payload from stdin
+payload_str = sys.stdin.read()
+payload = json.loads(payload_str)
+
+# Call build_redaction_plan directly
+text = payload["text"]
+rules = payload["rules"]
+mode = payload.get("mode", "hash")
+result = build_redaction_plan(text, rules, mode)
+sys.stdout.write(json.dumps(result))
+    `], {
+      env: { ...process.env, PYTHONPATH: projectRoot }
+    });
+    
     let stdout = '';
     let stderr = '';
     proc.stdout.on('data', (d) => (stdout += d.toString()));
@@ -52,15 +100,31 @@ export function registerPiiRedaction(context: vscode.ExtensionContext): void {
 
     const document = editor.document;
     const text = document.getText();
-    const payload = { text, rules: TEST_RULES, mode: 'hash' }; // TODO policy choice
+    const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '';
+    
+    // Load PII rules from policy
+    const rules = await loadPiiRulesFromPolicy(workspaceRoot);
+    const payload = { text, rules, mode: 'hash' };
 
     let plan: PlanItem[] = [];
     try {
-      const output = await runRedactionCli(payload);
+      const output = await runRedactionCli(payload, workspaceRoot);
       const parsed = JSON.parse(output);
       plan = parsed.plan || [];
     } catch (err: any) {
       vscode.window.showErrorMessage(`PII redaction failed: ${err.message || err}`);
+      return;
+    }
+    
+    if (plan.length === 0) {
+      vscode.window.showInformationMessage('No PII/secret patterns found to redact.');
+      return;
+    }
+    
+    // PC-1 check before write
+    const pc1Result = await pc1Check('m5.pii.redact', { plan }, workspaceRoot);
+    if (!pc1Result.allowed) {
+      vscode.window.showErrorMessage('PC-1 denied: PII redaction not allowed');
       return;
     }
 

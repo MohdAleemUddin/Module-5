@@ -1,0 +1,18 @@
+{
+  "module": "observability",
+  "version": "1.0.0",
+  "policy": {
+    "obs.required_signals": ["latency_ms", "status", "error_code", "request_id", "trace_id", "hw_ts_ms"],
+    "obs.min_telemetry_coverage_warn": 0.8,
+    "obs.min_telemetry_coverage_block": 0.6,
+    "obs.require_correlation_id": true,
+    "obs.require_hw_timestamp": true,
+    "obs.max_label_cardinality_warn": 100,
+    "obs.max_label_cardinality_block": 500,
+    "obs.disallow_dynamic_keys": true,
+    "obs.sample_rate_default": 1.0,
+    "obs.generated_marker_comment": "CC_OBS_SNIPPET"
+  },
+  "gate_mode": "Warn"
+}
+

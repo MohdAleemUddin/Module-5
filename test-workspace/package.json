@@ -1,0 +1,13 @@
+{
+  "name": "m5-test-workspace",
+  "version": "1.0.0",
+  "description": "Test workspace for Module 5 Observability Extension",
+  "scripts": {
+    "test": "echo 'Run tests in VS Code Extension Development Host'"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "typescript": "^5.3.3"
+  }
+}
+

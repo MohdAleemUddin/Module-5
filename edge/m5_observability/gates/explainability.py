@@ -10,8 +10,12 @@ def build_explainability(policy: dict, findings: dict, outcome: str) -> dict:
     
     require_correlation_id = policy.get("obs.require_correlation_id", False)
     require_hw_timestamp = policy.get("obs.require_hw_timestamp", False)
-    min_cov_warn = policy.get("obs.min_cov_warn", 80.0)
-    min_cov_block = policy.get("obs.min_cov_block", 70.0)
+    min_cov_warn = policy.get("obs.min_telemetry_coverage_warn", 0.8)  # Fixed: use correct key
+    if isinstance(min_cov_warn, float) and min_cov_warn <= 1.0:
+        min_cov_warn = min_cov_warn * 100.0  # Convert to percentage
+    min_cov_block = policy.get("obs.min_telemetry_coverage_block", 0.6)  # Fixed: use correct key
+    if isinstance(min_cov_block, float) and min_cov_block <= 1.0:
+        min_cov_block = min_cov_block * 100.0  # Convert to percentage
     disallow_dynamic_keys = policy.get("obs.disallow_dynamic_keys", False)
     cardinality_outcome = policy.get("obs.cardinality_outcome", "soft_block")
     
